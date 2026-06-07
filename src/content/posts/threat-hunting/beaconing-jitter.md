@@ -54,3 +54,4 @@ contacted every ~58s (±20%) by an unsigned binary is not a software updater.
 Jitter defeats interval matching, not statistics. Coefficient-of-variation
 scoring over connection deltas, plus destination enrichment, turns "too noisy
 to hunt" into a short, rankable list.
+t.

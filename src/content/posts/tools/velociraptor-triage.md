@@ -54,3 +54,4 @@ WHERE CommandLine =~ "powershell.*-enc"
 Velociraptor's superpower is *time to first answer*. A standalone collector for
 one box, a VQL hunt for the fleet — either way you're triaging in minutes, not
 after a week-long agent rollout.
+t.

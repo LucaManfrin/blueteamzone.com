@@ -46,3 +46,4 @@ child lineage to spot `winword.exe → cmd.exe → powershell.exe` chains.
 ETW won't replace a mature EDR's correlation and response, but for detection
 engineering and incident triage it gives you the same raw telemetry for the
 price of writing a trace session.
+n.

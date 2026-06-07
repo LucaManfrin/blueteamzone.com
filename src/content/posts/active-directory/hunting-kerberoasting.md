@@ -58,3 +58,4 @@ because the attacker reaches for SPNs the source account has never touched.
 Kerberoasting detection isn't about more events — it's about fewer, sharper
 ones. Encryption downgrades plus per-principal SPN baselines plus one honey-SPN
 will catch the vast majority of real attempts without burying your analysts.
+s.

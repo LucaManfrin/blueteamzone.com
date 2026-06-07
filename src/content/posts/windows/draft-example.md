@@ -20,3 +20,4 @@ This article is `published: false`. It must NEVER appear on the homepage, in
 categories, in search, in the RSS feed, or in the sitemap — and it has no public
 URL. It is parsed by the build but filtered out by the visibility logic, which
 is exactly what we want to verify.
+y.

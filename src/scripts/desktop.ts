@@ -7,6 +7,17 @@
 const root = document.documentElement;
 const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
+function updateThemeUI() {
+  const dark = root.getAttribute("data-theme") === "dark";
+  document
+    .querySelectorAll<HTMLElement>("#theme-toggle")
+    .forEach((b) => b.setAttribute("aria-pressed", String(dark)));
+  document
+    .querySelectorAll<HTMLElement>("[data-theme-label]")
+    .forEach((el) => (el.textContent = dark ? "Light Mode" : "Night Mode"));
+  const ico = document.getElementById("theme-ico");
+  if (ico) ico.textContent = dark ? "◑" : "◐";
+}
 function applyTheme(theme: "light" | "dark") {
   root.setAttribute("data-theme", theme);
   try {
@@ -14,13 +25,12 @@ function applyTheme(theme: "light" | "dark") {
   } catch {
     /* ignore */
   }
-  document
-    .querySelectorAll<HTMLElement>("#theme-toggle")
-    .forEach((b) => b.setAttribute("aria-pressed", String(theme === "dark")));
+  updateThemeUI();
 }
 function toggleTheme() {
   applyTheme(root.getAttribute("data-theme") === "dark" ? "light" : "dark");
 }
+updateThemeUI();
 
 let soundOn = false;
 try {
@@ -170,12 +180,22 @@ document.querySelectorAll<HTMLElement>(".win[data-win]").forEach((el) => {
   };
 
   if (el.hasAttribute("data-taskbar") && taskWrap) {
+    // Build the taskbar button with safe DOM APIs (no innerHTML) so a window
+    // title can never inject markup.
     const b = document.createElement("button");
     b.type = "button";
     b.className = "task-btn active";
-    b.innerHTML =
-      (w.icon ? `<img src="${w.icon}" alt="" width="16" height="16">` : "") +
-      `<span>${w.title}</span>`;
+    if (w.icon) {
+      const img = document.createElement("img");
+      img.src = w.icon;
+      img.alt = "";
+      img.width = 16;
+      img.height = 16;
+      b.appendChild(img);
+    }
+    const span = document.createElement("span");
+    span.textContent = w.title;
+    b.appendChild(span);
     b.addEventListener("click", () => {
       if (w.minimized) showWin(w);
       else if (el.classList.contains("is-focused")) minimizeWin(w);

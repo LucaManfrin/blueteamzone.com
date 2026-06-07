@@ -49,3 +49,4 @@ of syscalls.
 A dozen well-chosen rules beats four hundred copied ones. Watch identity,
 persistence and privilege escalation, key everything, and your auditd config
 will still be running — and still be read — six months from now.
+w.

@@ -267,3 +267,5 @@ table.explorer .name a { color: var(--face-text); text-decoration: none; overflo
   .tray .clock { min-width: 44px; }
   table.explorer .col-hide-sm { display: none; }
 }
+
+.tray-emoji { font-size: 14px; line-height: 1; }

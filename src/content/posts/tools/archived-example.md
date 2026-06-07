@@ -18,3 +18,4 @@ This article is `archived: true`. Even though `published` is true, it must be
 unreachable by direct URL (returns 404), and excluded from the homepage, latest
 sections, category listings, related posts, search and sitemap. Use this to
 preserve old content without deleting it.
+t.

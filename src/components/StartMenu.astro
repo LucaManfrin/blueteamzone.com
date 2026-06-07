@@ -2,9 +2,9 @@
 import { SOCIAL, CATEGORIES } from "@/site.config";
 
 const social = [
-  { href: SOCIAL.github, label: "GitHub", icon: "/icons/social-github.svg" },
-  { href: SOCIAL.linkedin, label: "LinkedIn", icon: "/icons/social-linkedin.svg" },
-  { href: SOCIAL.credly, label: "Credly", icon: "/icons/social-credly.svg" },
+  { href: SOCIAL.github, label: "GitHub", emoji: "🤖" },
+  { href: SOCIAL.linkedin, label: "LinkedIn", emoji: "💼" },
+  { href: SOCIAL.credly, label: "Credly", emoji: "🏅" },
 ].filter((s) => s.href && s.href.trim() !== "");
 ---
 
@@ -26,12 +26,12 @@ const social = [
       <img src="/icons/find.svg" alt="" />Find Notes
     </a>
     <a href="/rss.xml" role="menuitem">
-      <img src="/icons/social-rss.svg" alt="" />RSS Feed
+      <img src="/icons/Generic_Feed-icon.svg.png" alt="" />RSS Feed
     </a>
     {
       social.map((s) => (
         <a href={s.href} target="_blank" rel="noopener noreferrer me" role="menuitem">
-          <img src={s.icon} alt="" />
+          <span class="sm-icon" aria-hidden="true">{s.emoji}</span>
           {s.label}
         </a>
       ))
@@ -40,10 +40,11 @@ const social = [
     <div class="start-menu__sep" role="separator"></div>
 
     <button type="button" data-act="theme" role="menuitem">
-      <span class="sm-icon" aria-hidden="true">◐</span> Night Mode
+      <span class="sm-icon" id="theme-ico" aria-hidden="true">◐</span>
+      <span data-theme-label>Night Mode</span>
     </button>
-    <a href="/find" role="menuitem" class="start-menu__about">
-      <img src="/icons/help.svg" alt="" />About / Search
+    <a href="/" role="menuitem">
+      <img src="/icons/about.svg" alt="" />Desktop
     </a>
   </div>
 </div>
