@@ -211,19 +211,11 @@ document.querySelectorAll<HTMLElement>(".win[data-win]").forEach((el) => {
       const act = btn.getAttribute("data-act");
       if (act === "min") minimizeWin(w);
       else if (act === "max") {
-        el.classList.toggle("win--max");
-        if (el.classList.contains("win--max")) {
-          el.style.cssText +=
-            ";position:fixed;inset:0 0 40px 0;width:auto;max-width:none;max-height:none;z-index:8000";
-        } else {
-          el.style.position = "";
-          el.style.inset = "";
-          el.style.width = "";
-          el.style.maxWidth = "";
-          el.style.maxHeight = "";
-          el.style.zIndex = "";
-          focusWin(w);
-        }
+        // Fullscreen is handled purely by the .win--max CSS class, so the
+        // window's original inline left/top/width are preserved and restored
+        // exactly when un-maximized (no jumping behind the desktop icons).
+        const maxed = el.classList.toggle("win--max");
+        if (!maxed) focusWin(w);
       } else if (act === "close") closeWin(w);
     });
   });
@@ -271,6 +263,7 @@ function enableDrag(el: HTMLElement, handle: HTMLElement) {
   };
   handle.addEventListener("pointerdown", (e) => {
     if ((e.target as Element).closest(".win__btn")) return;
+    if (el.classList.contains("win--max")) return;
     dragging = true;
     el.classList.add("is-dragging");
     const r = el.getBoundingClientRect();

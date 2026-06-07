@@ -269,3 +269,15 @@ table.explorer .name a { color: var(--face-text); text-decoration: none; overflo
 }
 
 .tray-emoji { font-size: 14px; line-height: 1; }
+
+/* Maximized window: fills the screen above the icons; restoring removes this
+   class and the window's original inline left/top/width take over again. */
+.win--max {
+  position: fixed !important;
+  inset: 0 0 40px 0 !important;
+  width: auto !important;
+  max-width: none !important;
+  max-height: none !important;
+  z-index: 8000 !important;
+}
+.win--max .win__body { max-height: none !important; }
