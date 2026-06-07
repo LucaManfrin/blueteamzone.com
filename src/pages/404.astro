@@ -1,5 +1,6 @@
 ---
 import Base from "@/layouts/Base.astro";
+import Window from "@/components/Window.astro";
 ---
 
 <Base
@@ -7,23 +8,30 @@ import Base from "@/layouts/Base.astro";
   description="The page you requested could not be found."
   noindex={true}
 >
-  <section class="window bsod" style="margin-top:24px">
-    <div class="window__titlebar">
-      <span class="dot dot--r"></span>
-      <span class="dot dot--y"></span>
-      <span class="dot dot--g"></span>
-      <span class="title">system_error.exe</span>
+  <Window
+    class="error-dialog"
+    title="System Error"
+    icon="/icons/about.svg"
+    winId="error"
+    closeAction="back"
+    floating={false}
+    taskbar={false}
+  >
+    <div class="error-dialog__body">
+      <div class="error-dialog__icon" aria-hidden="true">✕</div>
+      <div class="error-dialog__msg">
+        <p style="margin:0 0 8px">
+          <strong>This page has performed an illegal operation and cannot be found.</strong>
+        </p>
+        <p style="margin:0;color:var(--face-text-muted)">
+          The shortcut you followed is broken, the note was archived, or it
+          never existed. Error code: <code>0x00000194</code>.
+        </p>
+      </div>
     </div>
-    <div class="window__body">
-      <p class="bsod__code">ERR_PAGE_NOT_FOUND · 0x00000194</p>
-      <h1>404</h1>
-      <p class="page-subtitle">
-        This sector of the disk is empty. The page moved, never existed, or was
-        archived.
-      </p>
-      <p>
-        <a class="btn btn--accent" href="/">◄ Return home</a>
-      </p>
+    <div class="error-dialog__btns">
+      <a class="btn" href="/">Return to Desktop</a>
+      <a class="btn" href="/find">Find a note…</a>
     </div>
-  </section>
+  </Window>
 </Base>

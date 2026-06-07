@@ -1,52 +1,56 @@
 ---
 import Base from "@/layouts/Base.astro";
-import PostCard from "@/components/PostCard.astro";
+import Window from "@/components/Window.astro";
+import MenuBar from "@/components/MenuBar.astro";
+import PostList from "@/components/PostList.astro";
+import DesktopIcons from "@/components/DesktopIcons.astro";
 import { SITE, HOME_LATEST_COUNT, HOME_PINNED_COUNT } from "@/site.config";
 import { getLatest, getPinned } from "@/lib/posts";
 
 const latest = await getLatest(HOME_LATEST_COUNT);
 const pinned = await getPinned(HOME_PINNED_COUNT);
+const hasNone = latest.length === 0;
 ---
 
 <Base title={SITE.title} description={SITE.description}>
-  <section class="hero window">
-    <div class="window__titlebar">
-      <span class="dot dot--r"></span>
-      <span class="dot dot--y"></span>
-      <span class="dot dot--g"></span>
-      <span class="title">~/welcome.txt</span>
-    </div>
-    <div class="window__body">
-      <h1>{SITE.title}<span class="blink" aria-hidden="true">_</span></h1>
-      <p class="hero__lead">{SITE.description}</p>
-    </div>
-  </section>
+  <div class="desktop">
+    <DesktopIcons />
 
-  {
-    pinned.length > 0 && (
-      <>
-        <h2 class="section-label">📌 Pinned</h2>
-        <div class="grid">
-          {pinned.map((post) => (
-            <PostCard post={post} />
-          ))}
-        </div>
-      </>
-    )
-  }
+    <Window
+      title="Latest Notes — My Notebook"
+      icon="/icons/latest.svg"
+      winId="latest"
+      floating={true}
+      closeAction="hide"
+      style="left:236px; top:24px;"
+    >
+      <MenuBar slot="menubar" variant="explorer" />
 
-  <h2 class="section-label">› Latest notes</h2>
-  {
-    latest.length > 0 ? (
-      <div class="grid">
-        {latest.map((post) => (
-          <PostCard post={post} />
-        ))}
-      </div>
-    ) : (
-      <p class="page-subtitle">
-        No published notes yet. Add a Markdown file under <code>src/content/posts/</code>.
+      <p style="margin:0 0 10px; font-size:12px; color:var(--face-text-muted)">
+        {SITE.description}
       </p>
-    )
-  }
+
+      <PostList posts={latest} caption="Latest notes" />
+
+      {
+        pinned.length > 0 && (
+          <div style="margin-top:16px">
+            <PostList posts={pinned} caption="Pinned" />
+          </div>
+        )
+      }
+
+      {hasNone && <p style="font-size:12px">No published notes yet.</p>}
+    </Window>
+  </div>
 </Base>
+
+<style is:global>
+  @media (min-width: 641px) {
+    .desktop .desktop-icons {
+      position: absolute;
+      left: 14px;
+      top: 14px;
+    }
+  }
+</style>

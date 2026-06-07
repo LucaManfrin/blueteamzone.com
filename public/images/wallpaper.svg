@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1000" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#0b2a4a"/>
+      <stop offset="0.45" stop-color="#1d5f8f"/>
+      <stop offset="0.75" stop-color="#2f86b0"/>
+      <stop offset="1" stop-color="#7fc1c8"/>
+    </linearGradient>
+    <linearGradient id="hill" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#1c6b5a"/>
+      <stop offset="1" stop-color="#0e4538"/>
+    </linearGradient>
+    <linearGradient id="hill2" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#258a6f"/>
+      <stop offset="1" stop-color="#136b4f"/>
+    </linearGradient>
+    <radialGradient id="sun" cx="0.7" cy="0.35" r="0.5">
+      <stop offset="0" stop-color="#bfe9e0" stop-opacity="0.55"/>
+      <stop offset="1" stop-color="#bfe9e0" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="1600" height="1000" fill="url(#sky)"/>
+  <rect width="1600" height="1000" fill="url(#sun)"/>
+  <!-- faint radar grid -->
+  <g stroke="#bfe9e0" stroke-opacity="0.06" fill="none">
+    <circle cx="1120" cy="350" r="120"/>
+    <circle cx="1120" cy="350" r="220"/>
+    <circle cx="1120" cy="350" r="320"/>
+    <line x1="1120" y1="30" x2="1120" y2="670"/>
+    <line x1="800" y1="350" x2="1440" y2="350"/>
+  </g>
+  <!-- rolling hills (bliss style, recolored) -->
+  <path d="M0 760 C 320 660, 560 700, 820 720 C 1080 740, 1320 700, 1600 660 L1600 1000 L0 1000 Z" fill="url(#hill2)"/>
+  <path d="M0 820 C 280 740, 600 800, 900 800 C 1200 800, 1400 770, 1600 740 L1600 1000 L0 1000 Z" fill="url(#hill)"/>
+  <!-- subtle ground texture lines -->
+  <g stroke="#0e4538" stroke-opacity="0.25">
+    <path d="M0 860 C 400 800, 1200 840, 1600 800" fill="none"/>
+    <path d="M0 910 C 500 860, 1100 900, 1600 870" fill="none"/>
+  </g>
+</svg>

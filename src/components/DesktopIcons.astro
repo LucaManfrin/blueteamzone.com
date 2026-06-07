@@ -1,0 +1,27 @@
+---
+import { CATEGORIES } from "@/site.config";
+---
+
+<div class="desktop-icons" role="list" aria-label="Desktop shortcuts">
+  {
+    CATEGORIES.map((c) => (
+      <a
+        class="dicon"
+        href={`/category/${c.slug}`}
+        role="listitem"
+        data-dblnav
+      >
+        <img src={`/icons/cat-${c.slug}.svg`} alt="" width="40" height="40" />
+        <span>{c.name}</span>
+      </a>
+    ))
+  }
+  <a class="dicon" href="/find" role="listitem" data-dblnav>
+    <img src="/icons/find.svg" alt="" width="40" height="40" />
+    <span>Find Notes</span>
+  </a>
+  <a class="dicon" href="/rss.xml" role="listitem" data-dblnav>
+    <img src="/icons/rss.svg" alt="" width="40" height="40" />
+    <span>RSS Feed</span>
+  </a>
+</div>

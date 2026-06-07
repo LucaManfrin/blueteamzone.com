@@ -1,0 +1,77 @@
+---
+import type { Post } from "@/lib/posts";
+import { postPath, readingMinutes } from "@/lib/posts";
+import { categorySlug, categoryBySlug } from "@/site.config";
+
+export interface Props {
+  posts: Post[];
+  caption?: string;
+  showPin?: boolean;
+}
+const { posts, caption, showPin = true } = Astro.props;
+
+const fmt = (d: Date) =>
+  d.toLocaleDateString("en-GB", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+  });
+---
+
+{caption && <p class="win-caption">{caption}</p>}
+
+<div class="filelist">
+  <table class="explorer">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th class="col-hide-sm">Category</th>
+        <th class="col-hide-sm">Modified</th>
+        <th>Size</th>
+      </tr>
+    </thead>
+    <tbody>
+      {
+        posts.map((post) => {
+          const slug = categorySlug(post.data.category);
+          const catName = categoryBySlug(slug)?.name ?? post.data.category;
+          const url = postPath(post);
+          return (
+            <tr data-href={url}>
+              <td>
+                <span class="name">
+                  <img src="/icons/doc.svg" alt="" width="16" height="16" />
+                  {showPin && post.data.pinned && (
+                    <span class="pin-flag" title="Pinned">
+                      📌
+                    </span>
+                  )}
+                  <a href={url}>{post.data.title}</a>
+                </span>
+              </td>
+              <td class="col-hide-sm col-cat">{catName}</td>
+              <td class="col-hide-sm">{fmt(post.data.date)}</td>
+              <td>
+                {post.data.readingTime ? `${readingMinutes(post)} min` : "—"}
+              </td>
+            </tr>
+          );
+        })
+      }
+      {
+        posts.length === 0 && (
+          <tr>
+            <td colspan="4" style="padding:14px;text-align:center;color:var(--face-text-muted)">
+              This folder is empty.
+            </td>
+          </tr>
+        )
+      }
+    </tbody>
+  </table>
+</div>
+
+<div class="statusbar">
+  <span class="cell">{posts.length} object(s)</span>
+  <span class="cell">Notes</span>
+</div>

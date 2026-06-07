@@ -44,32 +44,24 @@ export const SITE: SiteConfig = {
 };
 
 /**
- * Social / external links shown in the footer.
+ * Social / external links shown in the footer / taskbar tray.
  * Leave a value as an empty string ("") to hide that link.
  * Only these three link types are exposed -- no email, phone or address.
  */
 export const SOCIAL = {
-  // TODO: replace with your real profile URLs.
   github: "https://github.com/LucaManfrin",
   linkedin: "https://www.linkedin.com/in/lucamanfrin--",
   credly: "https://www.credly.com/users/luca-manfrin.600e2ebe",
 } as const;
 
 /**
- * Categories.
- *
- * The architecture reads categories from each post's frontmatter, so you can
- * add a brand-new category just by writing a post with a new `category` value.
- * This list only controls ORDER and the friendly description/labels for the
- * built-in nav. A category that appears in a post but not here still gets a
- * page automatically (it just uses a generated label).
+ * Categories. The architecture reads categories from each post's frontmatter,
+ * so a brand-new category works just by writing a post with a new `category`.
+ * This list only controls ORDER and the friendly labels for the built-in nav.
  */
 export interface Category {
-  /** URL slug, e.g. "active-directory" -> /category/active-directory */
   slug: string;
-  /** Friendly name, must match the `category` value used in frontmatter. */
   name: string;
-  /** Short description shown on the category page + meta. */
   description: string;
 }
 
@@ -106,19 +98,11 @@ export const CATEGORIES: Category[] = [
   },
 ];
 
-/** How many posts a category page shows before paginating. */
 export const POSTS_PER_PAGE = 9;
-/** How many "latest" posts the homepage shows. */
 export const HOME_LATEST_COUNT = 3;
-/** How many "pinned" posts the homepage shows. */
 export const HOME_PINNED_COUNT = 3;
-/** How many related posts to show on an article. */
 export const RELATED_COUNT = 3;
 
-/**
- * Map a category NAME (from frontmatter) to its slug, falling back to a
- * slugified version so unknown/new categories still resolve cleanly.
- */
 export function categorySlug(name: string): string {
   const known = CATEGORIES.find(
     (c) => c.name.toLowerCase() === name.toLowerCase()
@@ -131,7 +115,6 @@ export function categorySlug(name: string): string {
     .replace(/^-+|-+$/g, "");
 }
 
-/** Resolve a category by slug (used to find its friendly name/description). */
 export function categoryBySlug(slug: string): Category | undefined {
   return CATEGORIES.find((c) => c.slug === slug);
 }

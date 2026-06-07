@@ -1,9 +1,9 @@
 ---
 import type { GetStaticPaths } from "astro";
 import Base from "@/layouts/Base.astro";
-import FormattedDate from "@/components/FormattedDate.astro";
-import TableOfContents from "@/components/TableOfContents.astro";
-import PostCard from "@/components/PostCard.astro";
+import Window from "@/components/Window.astro";
+import MenuBar from "@/components/MenuBar.astro";
+import PostList from "@/components/PostList.astro";
 import {
   getListablePosts,
   getRelated,
@@ -12,8 +12,6 @@ import {
 } from "@/lib/posts";
 import { RELATED_COUNT, SITE, categorySlug, categoryBySlug } from "@/site.config";
 
-// Only LISTABLE posts get a route. Archived / unpublished / draft posts are
-// therefore unreachable by direct URL (they 404), per the visibility spec.
 export const getStaticPaths: GetStaticPaths = async () => {
   const posts = await getListablePosts();
   return posts.map((post) => ({
@@ -34,6 +32,13 @@ const minutes = readingMinutes(post);
 const related = await getRelated(post, RELATED_COUNT);
 const author = data.author ?? SITE.defaultAuthor;
 const canonicalPath = postPath(post);
+const toc = headings.filter((h) => h.depth === 2 || h.depth === 3);
+const fileName = (post.slug.split("/").pop() ?? "note").replace(/-/g, "_") + ".txt";
+const dateLabel = data.date.toLocaleDateString("en-GB", {
+  day: "2-digit",
+  month: "short",
+  year: "numeric",
+});
 ---
 
 <Base
@@ -48,64 +53,79 @@ const canonicalPath = postPath(post);
     tags: data.tags,
   }}
 >
-  <div class="article-layout">
-    <article>
-      <header class="article-header">
-        <p class="article-meta">
-          <a class="cat" href={`/category/${slug}`}>{catName}</a>
-          <FormattedDate date={data.date} />
-          {data.readingTime && <span>· {minutes} min read</span>}
-          {data.pinned && <span class="pin-badge">📌 pinned</span>}
-        </p>
-        <h1>{data.title}</h1>
-        <p class="page-subtitle">{data.description}</p>
-        {
-          data.coverImage && (
+  <div class="page-shell">
+    <Window
+      class="page-window notepad"
+      title={`${fileName} — Notepad`}
+      icon="/icons/notepad.svg"
+      winId="notepad"
+      closeAction="back"
+    >
+      <MenuBar slot="menubar" variant="notepad" />
+
+      <div class="doc" id="article-top">
+        <article>
+          <div class="article-head">
+            <h1>{data.title}</h1>
+            <p class="article-meta">
+              <a class="cat" href={`/category/${slug}`}>{catName}</a>
+              <span>{dateLabel}</span>
+              {data.readingTime && <span>{minutes} min read</span>}
+              {data.pinned && <span class="pin-flag">pinned</span>}
+              <span>by {author}</span>
+            </p>
+          </div>
+
+          {data.coverImage && (
             <img
-              class="cover"
               src={data.coverImage}
               alt={`Cover image for ${data.title}`}
+              style="width:100%;margin:0 0 16px"
               loading="eager"
               decoding="async"
             />
-          )
-        }
-        {
-          data.tags.length > 0 && (
-            <ul class="tags" style="margin-top:12px">
+          )}
+
+          {toc.length >= 3 && (
+            <nav class="callout" aria-label="Table of contents" style="margin-bottom:18px">
+              <span class="callout__icon" style="background:#6b6f73">≡</span>
+              <div>
+                <strong>Contents</strong>
+                <ol style="margin:6px 0 0;padding-left:18px">
+                  {toc.map((h) => (
+                    <li style={h.depth === 3 ? "margin-left:14px" : ""}>
+                      <a href={`#${h.slug}`}>{h.text}</a>
+                    </li>
+                  ))}
+                </ol>
+              </div>
+            </nav>
+          )}
+
+          <div class="prose">
+            <Content />
+          </div>
+
+          {data.tags.length > 0 && (
+            <ul class="tags">
               {data.tags.map((t) => (
-                <li class="tag">{t}</li>
+                <li class="tag">#{t}</li>
               ))}
             </ul>
-          )
-        }
-      </header>
+          )}
 
-      <div class="prose">
-        <Content />
-      </div>
+          <p class="article-meta" style="margin-top:22px;border-bottom:0;border-top:1px solid var(--sh-1);padding-top:10px">
+            <a href={canonicalPath} rel="bookmark">permalink</a>
+            <a href="/find">find more notes…</a>
+          </p>
 
-      <footer style="margin-top:32px">
-        <p class="article-meta">
-          <span>Written by {author}</span>
-          <a href={canonicalPath} rel="bookmark">permalink</a>
-        </p>
-      </footer>
-
-      {
-        related.length > 0 && (
-          <>
-            <h2 class="section-label">› Related notes</h2>
-            <div class="grid">
-              {related.map((p) => (
-                <PostCard post={p} />
-              ))}
+          {related.length > 0 && (
+            <div style="margin-top:8px">
+              <PostList posts={related} caption="Related notes" />
             </div>
-          </>
-        )
-      }
-    </article>
-
-    <TableOfContents headings={headings} />
+          )}
+        </article>
+      </div>
+    </Window>
   </div>
 </Base>

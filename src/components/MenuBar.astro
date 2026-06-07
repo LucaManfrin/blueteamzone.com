@@ -1,0 +1,64 @@
+---
+import { CATEGORIES, SOCIAL } from "@/site.config";
+
+export interface Props {
+  variant?: "explorer" | "notepad";
+}
+const { variant = "explorer" } = Astro.props;
+const isNote = variant === "notepad";
+---
+
+<nav class="menubar" aria-label="Window menu">
+  <details class="menu">
+    <summary><u>F</u>ile</summary>
+    <div class="menu__list">
+      <a href="/">New window</a>
+      {isNote && <button type="button" data-act="print">Print…</button>}
+      <div class="menu__sep"></div>
+      <button type="button" data-act="close">Close</button>
+    </div>
+  </details>
+
+  <details class="menu">
+    <summary><u>E</u>dit</summary>
+    <div class="menu__list">
+      {isNote && <button type="button" data-act="selectall">Select All</button>}
+      <a href="/find">Find…</a>
+    </div>
+  </details>
+
+  <details class="menu">
+    <summary><u>V</u>iew</summary>
+    <div class="menu__list">
+      <button type="button" data-act="theme">Toggle Night Mode</button>
+      <a href="/rss.xml">RSS feed</a>
+    </div>
+  </details>
+
+  <details class="menu">
+    <summary><u>G</u>o</summary>
+    <div class="menu__list">
+      <a href="/">Desktop (Home)</a>
+      <div class="menu__sep"></div>
+      {
+        CATEGORIES.map((c) => (
+          <a href={`/category/${c.slug}`}>{c.name}</a>
+        ))
+      }
+    </div>
+  </details>
+
+  <details class="menu">
+    <summary><u>H</u>elp</summary>
+    <div class="menu__list">
+      <a href="/find">Search notes…</a>
+      {
+        SOCIAL.github && (
+          <a href={SOCIAL.github} target="_blank" rel="noopener noreferrer">
+            View source
+          </a>
+        )
+      }
+    </div>
+  </details>
+</nav>

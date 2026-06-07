@@ -1,0 +1,57 @@
+---
+import { SITE, SOCIAL, CATEGORIES } from "@/site.config";
+
+const social = [
+  { href: SOCIAL.github, label: "GitHub" },
+  { href: SOCIAL.linkedin, label: "LinkedIn" },
+  { href: SOCIAL.credly, label: "Credly" },
+].filter((s) => s.href && s.href.trim() !== "");
+---
+
+<div id="start-menu" class="start-menu" role="menu" aria-label="Start menu">
+  <div class="start-menu__banner">
+    <span>{SITE.title}</span>
+  </div>
+  <div class="start-menu__body">
+    <div class="start-menu__rail" aria-hidden="true"></div>
+    <div class="start-menu__list">
+      <a href="/" role="menuitem">
+        <img src="/icons/about.svg" alt="" />Desktop (Home)
+      </a>
+      <a href="/find" role="menuitem">
+        <img src="/icons/find.svg" alt="" />Find notes…
+      </a>
+      <div class="start-menu__sep"></div>
+      {
+        CATEGORIES.map((c) => (
+          <a href={`/category/${c.slug}`} role="menuitem">
+            <img src={`/icons/cat-${c.slug}.svg`} alt="" />
+            {c.name}
+          </a>
+        ))
+      }
+      <div class="start-menu__sep"></div>
+      <a href="/rss.xml" role="menuitem">
+        <img src="/icons/rss.svg" alt="" />RSS feed
+      </a>
+      {
+        social.map((s) => (
+          <a
+            href={s.href}
+            target="_blank"
+            rel="noopener noreferrer me"
+            role="menuitem"
+          >
+            <img src="/icons/about.svg" alt="" />
+            {s.label}
+          </a>
+        ))
+      }
+    </div>
+  </div>
+  <div class="start-menu__foot">
+    <button type="button" data-act="theme">
+      <span aria-hidden="true">◐</span> Night Mode
+    </button>
+  </div>
+</div>

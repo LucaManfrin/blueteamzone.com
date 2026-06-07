@@ -1,5 +1,7 @@
 ---
-import PostCard from "@/components/PostCard.astro";
+import Window from "@/components/Window.astro";
+import MenuBar from "@/components/MenuBar.astro";
+import PostList from "@/components/PostList.astro";
 import Pagination from "@/components/Pagination.astro";
 import type { Post } from "@/lib/posts";
 
@@ -15,24 +17,29 @@ const { name, description, slug, posts, current, total } = Astro.props;
 
 const hrefFor = (page: number) =>
   page <= 1 ? `/category/${slug}` : `/category/${slug}/page/${page}`;
+const pageLabel = current > 1 ? ` (page ${current})` : "";
+const addr = `C:\\notes\\${slug}`;
 ---
 
-<header>
-  <p class="card__cat" style="font-family:var(--font-mono)">/category/{slug}</p>
-  <h1 class="page-title">{name}</h1>
-  <p class="page-subtitle">{description}</p>
-</header>
+<div class="page-shell">
+  <Window
+    class="page-window"
+    title={`${name}${pageLabel} — ${addr}`}
+    icon={`/icons/cat-${slug}.svg`}
+    winId="explorer"
+    closeAction="back"
+  >
+    <MenuBar slot="menubar" variant="explorer" />
 
-{
-  posts.length > 0 ? (
-    <div class="grid">
-      {posts.map((post) => (
-        <PostCard post={post} />
-      ))}
-    </div>
-  ) : (
-    <p class="page-subtitle">No notes in this category yet.</p>
-  )
-}
+    <p style="font-family:var(--font-mono);font-size:12px;color:var(--face-text-muted);margin:0 0 8px">
+      Address: <span class="field" style="padding:1px 6px">{addr}</span>
+    </p>
+    <p class="win-caption">{name}</p>
+    <p style="margin:0 0 12px;font-size:12px;color:var(--face-text-muted)">
+      {description}
+    </p>
 
-<Pagination current={current} total={total} hrefFor={hrefFor} />
+    <PostList posts={posts} />
+    <Pagination current={current} total={total} hrefFor={hrefFor} />
+  </Window>
+</div>

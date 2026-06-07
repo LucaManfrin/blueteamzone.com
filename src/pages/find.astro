@@ -1,0 +1,62 @@
+---
+import Base from "@/layouts/Base.astro";
+import Window from "@/components/Window.astro";
+import MenuBar from "@/components/MenuBar.astro";
+---
+
+<Base
+  title="Find: Notes"
+  description="Search all published notes on this site."
+  noindex={true}
+>
+  <div class="page-shell">
+    <Window
+      class="page-window"
+      title="Find: Notes"
+      icon="/icons/find.svg"
+      winId="find"
+      closeAction="back"
+      style="max-width:760px"
+    >
+      <MenuBar slot="menubar" variant="explorer" />
+
+      <form class="find" role="search" autocomplete="off">
+        <div class="find__row">
+          <label for="find-input">Named:</label>
+          <input
+            id="find-input"
+            class="field"
+            type="search"
+            name="q"
+            placeholder="type a word, tag or phrase…"
+            aria-label="Search notes"
+            aria-controls="find-results"
+            autofocus
+          />
+          <button class="btn" type="submit">Find Now</button>
+        </div>
+        <p
+          style="margin:0;font-size:11px;color:var(--face-text-muted)"
+        >
+          Searches titles, descriptions, tags and body text of all published
+          notes. Tip: press <kbd>/</kbd> anywhere to jump here.
+        </p>
+      </form>
+
+      <div
+        id="find-results"
+        class="filelist"
+        style="margin-top:12px"
+        role="region"
+        aria-live="polite"
+        aria-label="Search results"
+      >
+        <div class="search-empty">Start typing to search…</div>
+      </div>
+    </Window>
+  </div>
+</Base>
+
+<script>
+  import "@/scripts/find.ts";
+</script>

@@ -1,0 +1,97 @@
+---
+/**
+ * Reusable Win98-style window. Each "window" is real page content; the
+ * lightweight desktop.ts script wires up focus, drag, minimize and the
+ * matching taskbar button.
+ */
+export interface Props {
+  title: string;
+  icon?: string;
+  /** Unique id used to link the window with its taskbar button. */
+  winId: string;
+  /** Floating window on the desktop (absolutely positioned + draggable). */
+  floating?: boolean;
+  /** Show min/maximize/close controls. */
+  controls?: boolean;
+  /** What the close button does: "hide" (desktop) or "back" (inner pages). */
+  closeAction?: "hide" | "back";
+  /** Register a button for this window in the taskbar. */
+  taskbar?: boolean;
+  /** Inline style (e.g. position for floating windows). */
+  style?: string;
+  class?: string;
+}
+const {
+  title,
+  icon,
+  winId,
+  floating = false,
+  controls = true,
+  closeAction = "hide",
+  taskbar = true,
+  style,
+  class: extra = "",
+} = Astro.props;
+const hasMenubar = Astro.slots.has("menubar");
+---
+
+<section
+  class:list={["win", { floating, "win--animate": floating }, extra]}
+  data-win={winId}
+  data-taskbar={taskbar ? "" : undefined}
+  data-close={closeAction}
+  data-title={title}
+  data-icon={icon}
+  style={style}
+  aria-label={title}
+>
+  <header class:list={["win__titlebar", { draggable: floating }]}>
+    {icon && <img class="win__icon" src={icon} alt="" width="16" height="16" />}
+    <span class="win__title">{title}</span>
+    {
+      controls && (
+        <div class="win__controls">
+          <button
+            type="button"
+            class="win__btn"
+            data-act="min"
+            aria-label="Minimize"
+            title="Minimize"
+          >
+            _
+          </button>
+          <button
+            type="button"
+            class="win__btn"
+            data-act="max"
+            aria-label="Maximize"
+            title="Maximize"
+          >
+            ▭
+          </button>
+          <button
+            type="button"
+            class="win__btn win__btn--close"
+            data-act="close"
+            aria-label="Close"
+            title="Close"
+          >
+            ✕
+          </button>
+        </div>
+      )
+    }
+  </header>
+
+  {
+    hasMenubar && (
+      <div class="win__menubar-wrap">
+        <slot name="menubar" />
+      </div>
+    )
+  }
+
+  <div class="win__body">
+    <slot />
+  </div>
+</section>
