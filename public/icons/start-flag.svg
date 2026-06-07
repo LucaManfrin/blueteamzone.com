@@ -1,8 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
-  <g transform="rotate(-8 16 16)">
-    <path d="M4 6 L15 4 L15 15 L4 16 Z" fill="#f25022"/>
-    <path d="M16 4 L28 2 L28 14 L16 15 Z" fill="#7fba00"/>
-    <path d="M4 17 L15 16 L15 27 L4 28 Z" fill="#00a4ef"/>
-    <path d="M16 16 L28 15 L28 27 L16 28 Z" fill="#ffb900"/>
-  </g>
-</svg>
