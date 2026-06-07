@@ -1,0 +1,57 @@
+---
+import type { Post } from "@/lib/posts";
+import { postPath, readingMinutes } from "@/lib/posts";
+import { categorySlug, categoryBySlug } from "@/site.config";
+import FormattedDate from "@/components/FormattedDate.astro";
+
+export interface Props {
+  post: Post;
+}
+const { post } = Astro.props;
+const { data } = post;
+const slug = categorySlug(data.category);
+const catName = categoryBySlug(slug)?.name ?? data.category;
+const url = postPath(post);
+const minutes = data.readingTime ? readingMinutes(post) : undefined;
+---
+
+<article class="card window">
+  <div class="window__titlebar">
+    <span class="dot dot--r"></span>
+    <span class="dot dot--y"></span>
+    <span class="dot dot--g"></span>
+    <span class="title">{catName}.md</span>
+    {data.pinned && <span class="pin-badge">📌 pinned</span>}
+  </div>
+  {
+    data.coverImage && (
+      <a href={url} tabindex="-1" aria-hidden="true">
+        <img
+          class="card__cover"
+          src={data.coverImage}
+          alt=""
+          loading="lazy"
+          decoding="async"
+        />
+      </a>
+    )
+  }
+  <div class="window__body">
+    <div class="card__meta">
+      <span class="card__cat">{catName}</span>
+      <FormattedDate date={data.date} />
+    </div>
+    <h3 class="card__title">
+      <a href={url}>{data.title}</a>
+    </h3>
+    <p class="card__desc">{data.description}</p>
+    <div class="card__footer">
+      {
+        data.tags.length > 0 && (
+          <span>#{data.tags.slice(0, 2).join("  #")}</span>
+        )
+      }
+      {minutes && <span>{minutes} min read</span>}
+    </div>
+  </div>
+</article>

@@ -1,0 +1,36 @@
+---
+import type { MarkdownHeading } from "astro";
+
+export interface Props {
+  headings: MarkdownHeading[];
+}
+const { headings } = Astro.props;
+// Only show h2 / h3 in the TOC to keep it tidy.
+const items = headings.filter((h) => h.depth === 2 || h.depth === 3);
+---
+
+{
+  items.length > 0 && (
+    <aside class="toc window" aria-label="Table of contents">
+      <div class="window__titlebar">
+        <span class="dot dot--r" />
+        <span class="dot dot--y" />
+        <span class="dot dot--g" />
+        <span class="title">contents</span>
+      </div>
+      <nav class="window__body">
+        <ul>
+          {items.map((h) => (
+            <li class={`depth-${h.depth}`}>
+              <a href={`#${h.slug}`}>{h.text}</a>
+            </li>
+          ))}
+        </ul>
+      </nav>
+    </aside>
+  )
+}
+
+<script>
+  import "@/scripts/toc.ts";
+</script>

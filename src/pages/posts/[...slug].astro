@@ -1,0 +1,111 @@
+---
+import type { GetStaticPaths } from "astro";
+import Base from "@/layouts/Base.astro";
+import FormattedDate from "@/components/FormattedDate.astro";
+import TableOfContents from "@/components/TableOfContents.astro";
+import PostCard from "@/components/PostCard.astro";
+import {
+  getListablePosts,
+  getRelated,
+  readingMinutes,
+  postPath,
+} from "@/lib/posts";
+import { RELATED_COUNT, SITE, categorySlug, categoryBySlug } from "@/site.config";
+
+// Only LISTABLE posts get a route. Archived / unpublished / draft posts are
+// therefore unreachable by direct URL (they 404), per the visibility spec.
+export const getStaticPaths: GetStaticPaths = async () => {
+  const posts = await getListablePosts();
+  return posts.map((post) => ({
+    params: { slug: post.slug },
+    props: { post },
+  }));
+};
+
+const { post } = Astro.props as {
+  post: Awaited<ReturnType<typeof getListablePosts>>[number];
+};
+const { Content, headings } = await post.render();
+
+const data = post.data;
+const slug = categorySlug(data.category);
+const catName = categoryBySlug(slug)?.name ?? data.category;
+const minutes = readingMinutes(post);
+const related = await getRelated(post, RELATED_COUNT);
+const author = data.author ?? SITE.defaultAuthor;
+const canonicalPath = postPath(post);
+---
+
+<Base
+  title={data.title}
+  description={data.description}
+  image={data.coverImage ?? SITE.defaultOgImage}
+  type="article"
+  article={{
+    publishedTime: data.date.toISOString(),
+    author,
+    section: catName,
+    tags: data.tags,
+  }}
+>
+  <div class="article-layout">
+    <article>
+      <header class="article-header">
+        <p class="article-meta">
+          <a class="cat" href={`/category/${slug}`}>{catName}</a>
+          <FormattedDate date={data.date} />
+          {data.readingTime && <span>· {minutes} min read</span>}
+          {data.pinned && <span class="pin-badge">📌 pinned</span>}
+        </p>
+        <h1>{data.title}</h1>
+        <p class="page-subtitle">{data.description}</p>
+        {
+          data.coverImage && (
+            <img
+              class="cover"
+              src={data.coverImage}
+              alt={`Cover image for ${data.title}`}
+              loading="eager"
+              decoding="async"
+            />
+          )
+        }
+        {
+          data.tags.length > 0 && (
+            <ul class="tags" style="margin-top:12px">
+              {data.tags.map((t) => (
+                <li class="tag">{t}</li>
+              ))}
+            </ul>
+          )
+        }
+      </header>
+
+      <div class="prose">
+        <Content />
+      </div>
+
+      <footer style="margin-top:32px">
+        <p class="article-meta">
+          <span>Written by {author}</span>
+          <a href={canonicalPath} rel="bookmark">permalink</a>
+        </p>
+      </footer>
+
+      {
+        related.length > 0 && (
+          <>
+            <h2 class="section-label">› Related notes</h2>
+            <div class="grid">
+              {related.map((p) => (
+                <PostCard post={p} />
+              ))}
+            </div>
+          </>
+        )
+      }
+    </article>
+
+    <TableOfContents headings={headings} />
+  </div>
+</Base>

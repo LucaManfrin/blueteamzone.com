@@ -1,0 +1,81 @@
+---
+import type { GetStaticPaths } from "astro";
+import Base from "@/layouts/Base.astro";
+import CategoryView from "@/components/CategoryView.astro";
+import {
+  CATEGORIES,
+  POSTS_PER_PAGE,
+  categoryBySlug,
+  categorySlug,
+} from "@/site.config";
+import { getListablePosts } from "@/lib/posts";
+
+export const getStaticPaths: GetStaticPaths = async () => {
+  const all = await getListablePosts();
+
+  // Build the union of configured categories AND any categories that appear
+  // in posts (so new categories work with zero code changes).
+  const slugs = new Set<string>(CATEGORIES.map((c) => c.slug));
+  for (const p of all) slugs.add(categorySlug(p.data.category));
+
+  const paths: Array<{
+    params: { slug: string; page: string | undefined };
+    props: Record<string, unknown>;
+  }> = [];
+
+  for (const slug of slugs) {
+    const posts = all.filter((p) => categorySlug(p.data.category) === slug);
+    const total = Math.max(1, Math.ceil(posts.length / POSTS_PER_PAGE));
+    const meta = categoryBySlug(slug);
+    const name = meta?.name ?? slug.replace(/-/g, " ");
+    const description =
+      meta?.description ?? `Notes filed under ${name}.`;
+
+    for (let page = 1; page <= total; page++) {
+      const start = (page - 1) * POSTS_PER_PAGE;
+      paths.push({
+        params: {
+          slug,
+          // page 1 -> /category/<slug>  ; page N -> /category/<slug>/page/N
+          page: page === 1 ? undefined : `page/${page}`,
+        },
+        props: {
+          name,
+          description,
+          slug,
+          posts: posts.slice(start, start + POSTS_PER_PAGE),
+          current: page,
+          total,
+        },
+      });
+    }
+  }
+  return paths;
+};
+
+const { name, description, slug, posts, current, total } = Astro.props as {
+  name: string;
+  description: string;
+  slug: string;
+  posts: Awaited<ReturnType<typeof getListablePosts>>;
+  current: number;
+  total: number;
+};
+
+const pageSuffix = current > 1 ? ` (page ${current})` : "";
+---
+
+<Base
+  title={`${name}${pageSuffix}`}
+  description={description}
+  type="website"
+>
+  <CategoryView
+    name={name}
+    description={description}
+    slug={slug}
+    posts={posts}
+    current={current}
+    total={total}
+  />
+</Base>

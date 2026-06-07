@@ -1,0 +1,73 @@
+---
+import { SITE, CATEGORIES } from "@/site.config";
+
+const path = Astro.url.pathname;
+const isActive = (href: string) =>
+  href === "/" ? path === "/" : path.startsWith(href);
+---
+
+<header class="site-header">
+  <div class="container site-header__inner">
+    <a class="brand" href="/" aria-label={`${SITE.title} — home`}>
+      <img class="brand__logo" src="/logo.svg" alt="" width="38" height="38" />
+      <span class="brand__text">
+        <span class="brand__name">{SITE.authorName}</span>
+        <span class="brand__title">{SITE.authorTitle}</span>
+      </span>
+    </a>
+
+    <nav class="nav" aria-label="Primary">
+      <a href="/" aria-current={path === "/" ? "page" : undefined}>Home</a>
+      {
+        CATEGORIES.map((c) => (
+          <a
+            href={`/category/${c.slug}`}
+            aria-current={isActive(`/category/${c.slug}`) ? "page" : undefined}
+          >
+            {c.name}
+          </a>
+        ))
+      }
+    </nav>
+
+    <div class="header-tools">
+      <form class="search" role="search" autocomplete="off">
+        <span class="search__icon" aria-hidden="true">⌕</span>
+        <label class="visually-hidden" for="search-input">Search notes</label>
+        <input
+          id="search-input"
+          type="search"
+          name="q"
+          placeholder="search…  ( / )"
+          aria-label="Search notes"
+          aria-controls="search-results"
+        />
+        <div
+          id="search-results"
+          class="search__results"
+          role="region"
+          aria-live="polite"
+          aria-label="Search results"
+        >
+        </div>
+      </form>
+
+      <button
+        id="theme-toggle"
+        class="icon-btn theme-toggle"
+        type="button"
+        aria-label="Toggle dark / light theme"
+        aria-pressed="false"
+        title="Toggle theme"
+      >
+        <span class="sun" aria-hidden="true">☀</span>
+        <span class="moon" aria-hidden="true">☾</span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<script>
+  import "@/scripts/theme-toggle.ts";
+  import "@/scripts/search.ts";
+</script>

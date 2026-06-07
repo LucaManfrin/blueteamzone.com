@@ -1,0 +1,39 @@
+---
+export interface Props {
+  /** 1-based current page. */
+  current: number;
+  /** Total number of pages. */
+  total: number;
+  /** Builds the href for a given page number. */
+  hrefFor: (page: number) => string;
+}
+const { current, total, hrefFor } = Astro.props;
+const hasPrev = current > 1;
+const hasNext = current < total;
+---
+
+{
+  total > 1 && (
+    <nav class="pagination" aria-label="Pagination">
+      <a
+        class={`btn ${hasPrev ? "" : "disabled"}`}
+        href={hasPrev ? hrefFor(current - 1) : "#"}
+        rel="prev"
+        aria-disabled={!hasPrev}
+      >
+        ◄ Prev
+      </a>
+      <span class="page-of" aria-current="page">
+        page {current} / {total}
+      </span>
+      <a
+        class={`btn ${hasNext ? "" : "disabled"}`}
+        href={hasNext ? hrefFor(current + 1) : "#"}
+        rel="next"
+        aria-disabled={!hasNext}
+      >
+        Next ►
+      </a>
+    </nav>
+  )
+}

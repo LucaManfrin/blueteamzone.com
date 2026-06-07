@@ -1,0 +1,29 @@
+---
+import Base from "@/layouts/Base.astro";
+---
+
+<Base
+  title="404 — Page not found"
+  description="The page you requested could not be found."
+  noindex={true}
+>
+  <section class="window bsod" style="margin-top:24px">
+    <div class="window__titlebar">
+      <span class="dot dot--r"></span>
+      <span class="dot dot--y"></span>
+      <span class="dot dot--g"></span>
+      <span class="title">system_error.exe</span>
+    </div>
+    <div class="window__body">
+      <p class="bsod__code">ERR_PAGE_NOT_FOUND · 0x00000194</p>
+      <h1>404</h1>
+      <p class="page-subtitle">
+        This sector of the disk is empty. The page moved, never existed, or was
+        archived.
+      </p>
+      <p>
+        <a class="btn btn--accent" href="/">◄ Return home</a>
+      </p>
+    </div>
+  </section>
+</Base>

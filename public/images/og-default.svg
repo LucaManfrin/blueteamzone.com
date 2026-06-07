@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#15161c"/>
+      <stop offset="1" stop-color="#20222e"/>
+    </linearGradient>
+    <linearGradient id="bar" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#2e3344"/>
+      <stop offset="1" stop-color="#3a4d63"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <g>
+    <rect x="80" y="90" width="1040" height="450" rx="8" fill="#20222e" stroke="#050608" stroke-width="3"/>
+    <rect x="86" y="96" width="1028" height="44" fill="url(#bar)"/>
+    <circle cx="116" cy="118" r="7" fill="#e06c6c"/>
+    <circle cx="140" cy="118" r="7" fill="#e0c36c"/>
+    <circle cx="164" cy="118" r="7" fill="#84c06c"/>
+    <text x="200" y="124" font-family="monospace" font-size="20" fill="#f4f5fb">~/notes</text>
+    <text x="120" y="260" font-family="monospace" font-size="64" font-weight="700" fill="#f2a65a">0xPUMA // notes</text>
+    <text x="120" y="330" font-family="monospace" font-size="30" fill="#4ec9b0">field notes from the blue &amp; red side</text>
+    <text x="120" y="470" font-family="monospace" font-size="24" fill="#a3a6b8">windows · active directory · linux · macos · hunting · tools</text>
+  </g>
+</svg>

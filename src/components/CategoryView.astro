@@ -1,0 +1,38 @@
+---
+import PostCard from "@/components/PostCard.astro";
+import Pagination from "@/components/Pagination.astro";
+import type { Post } from "@/lib/posts";
+
+export interface Props {
+  name: string;
+  description: string;
+  slug: string;
+  posts: Post[];
+  current: number;
+  total: number;
+}
+const { name, description, slug, posts, current, total } = Astro.props;
+
+const hrefFor = (page: number) =>
+  page <= 1 ? `/category/${slug}` : `/category/${slug}/page/${page}`;
+---
+
+<header>
+  <p class="card__cat" style="font-family:var(--font-mono)">/category/{slug}</p>
+  <h1 class="page-title">{name}</h1>
+  <p class="page-subtitle">{description}</p>
+</header>
+
+{
+  posts.length > 0 ? (
+    <div class="grid">
+      {posts.map((post) => (
+        <PostCard post={post} />
+      ))}
+    </div>
+  ) : (
+    <p class="page-subtitle">No notes in this category yet.</p>
+  )
+}
+
+<Pagination current={current} total={total} hrefFor={hrefFor} />
