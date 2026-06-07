@@ -40,7 +40,7 @@ export const SITE: SiteConfig = {
   authorTitle: "Cyber Security Specialist",
   defaultAuthor: "Luca Manfrin",
   lang: "en",
-  defaultOgImage: "/images/logo-radar1.jpg",
+  defaultOgImage: "/images/website-logo.png",
 };
 
 /**
