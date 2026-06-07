@@ -10,7 +10,7 @@ tags:
 published: true
 archived: false
 pinned: false
-author: "Your Name"
+author: "Luca Manfrin"
 readingTime: true
 ---
 

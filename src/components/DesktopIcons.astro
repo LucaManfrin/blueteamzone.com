@@ -1,27 +1,35 @@
 ---
 import { CATEGORIES } from "@/site.config";
+const rest = CATEGORIES.filter((c) => c.slug !== "windows");
 ---
 
 <div class="desktop-icons" role="list" aria-label="Desktop shortcuts">
+  <a class="dicon" href="/category/windows" role="listitem" data-dblnav>
+    <img src="/icons/cat-windows.svg" alt="" width="40" height="40" />
+    <span>Windows</span>
+  </a>
+
+  <a class="dicon" href="/find" role="listitem" data-dblnav>
+    <img src="/icons/find.svg" alt="" width="40" height="40" />
+    <span>Find Notes</span>
+  </a>
+
+  <a class="dicon" href="/" role="listitem" data-open="latest" data-dblnav>
+    <img src="/images/og-default.png" alt="" width="40" height="40" style="object-fit:cover;border-radius:4px" />
+    <span>Profile</span>
+  </a>
+
   {
-    CATEGORIES.map((c) => (
-      <a
-        class="dicon"
-        href={`/category/${c.slug}`}
-        role="listitem"
-        data-dblnav
-      >
+    rest.map((c) => (
+      <a class="dicon" href={`/category/${c.slug}`} role="listitem" data-dblnav>
         <img src={`/icons/cat-${c.slug}.svg`} alt="" width="40" height="40" />
         <span>{c.name}</span>
       </a>
     ))
   }
-  <a class="dicon" href="/find" role="listitem" data-dblnav>
-    <img src="/icons/find.svg" alt="" width="40" height="40" />
-    <span>Find Notes</span>
-  </a>
+
   <a class="dicon" href="/rss.xml" role="listitem" data-dblnav>
-    <img src="/icons/rss.svg" alt="" width="40" height="40" />
+    <img src="/icons/social-rss.svg" alt="" width="40" height="40" />
     <span>RSS Feed</span>
   </a>
 </div>

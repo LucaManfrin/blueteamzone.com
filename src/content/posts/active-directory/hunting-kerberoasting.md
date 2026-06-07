@@ -11,7 +11,7 @@ published: true
 archived: false
 pinned: true
 featured: true
-author: "Your Name"
+author: "Luca Manfrin"
 readingTime: true
 ---
 

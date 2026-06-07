@@ -14,7 +14,7 @@ pinned: false # true  => also shown in the homepage "Pinned" section
 featured: false # reserved flag for future use
 draft: false # alias for published:false behaviour
 
-author: "Your Name"
+author: "Luca Manfrin"
 coverImage: "" # e.g. "/images/posts/example.webp" (optional)
 readingTime: true
 ---

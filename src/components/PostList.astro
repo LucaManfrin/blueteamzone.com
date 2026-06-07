@@ -42,18 +42,14 @@ const fmt = (d: Date) =>
                 <span class="name">
                   <img src="/icons/doc.svg" alt="" width="16" height="16" />
                   {showPin && post.data.pinned && (
-                    <span class="pin-flag" title="Pinned">
-                      📌
-                    </span>
+                    <span class="pin-flag" title="Pinned">📌</span>
                   )}
                   <a href={url}>{post.data.title}</a>
                 </span>
               </td>
               <td class="col-hide-sm col-cat">{catName}</td>
               <td class="col-hide-sm">{fmt(post.data.date)}</td>
-              <td>
-                {post.data.readingTime ? `${readingMinutes(post)} min` : "—"}
-              </td>
+              <td>{post.data.readingTime ? `${readingMinutes(post)} min` : "—"}</td>
             </tr>
           );
         })
@@ -69,9 +65,4 @@ const fmt = (d: Date) =>
       }
     </tbody>
   </table>
-</div>
-
-<div class="statusbar">
-  <span class="cell">{posts.length} object(s)</span>
-  <span class="cell">Notes</span>
 </div>

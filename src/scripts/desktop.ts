@@ -1,15 +1,12 @@
 /* =====================================================================
    Desktop environment: window manager (light), Start menu, clock,
-   theme toggle, UI sounds, idle screensaver, menu actions.
+   theme toggle, UI sounds, menu actions.
    All same-origin, no inline handlers -> works under strict CSP.
    ===================================================================== */
 
 const root = document.documentElement;
-const reduceMotion = window.matchMedia(
-  "(prefers-reduced-motion: reduce)"
-).matches;
+const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-/* ---------------- Theme ---------------- */
 function applyTheme(theme: "light" | "dark") {
   root.setAttribute("data-theme", theme);
   try {
@@ -25,7 +22,6 @@ function toggleTheme() {
   applyTheme(root.getAttribute("data-theme") === "dark" ? "light" : "dark");
 }
 
-/* ---------------- UI sounds (off by default) ---------------- */
 let soundOn = false;
 try {
   soundOn = localStorage.getItem("ui-sounds") === "on";
@@ -36,9 +32,7 @@ let audioCtx: AudioContext | null = null;
 function beep(freq: number, ms: number, vol = 0.04) {
   if (!soundOn || reduceMotion) return;
   try {
-    audioCtx =
-      audioCtx ||
-      new (window.AudioContext || (window as any).webkitAudioContext)();
+    audioCtx = audioCtx || new (window.AudioContext || (window as any).webkitAudioContext)();
     const o = audioCtx.createOscillator();
     const g = audioCtx.createGain();
     o.type = "square";
@@ -46,10 +40,7 @@ function beep(freq: number, ms: number, vol = 0.04) {
     g.gain.value = vol;
     o.connect(g).connect(audioCtx.destination);
     o.start();
-    g.gain.exponentialRampToValueAtTime(
-      0.0001,
-      audioCtx.currentTime + ms / 1000
-    );
+    g.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + ms / 1000);
     o.stop(audioCtx.currentTime + ms / 1000);
   } catch {
     /* ignore */
@@ -62,12 +53,8 @@ function updateMuteUI() {
   const span = btn.querySelector("span");
   if (span)
     span.textContent =
-      span.getAttribute(soundOn ? "data-on" : "data-off") ||
-      (soundOn ? "🔊" : "🔈");
-  btn.setAttribute(
-    "title",
-    soundOn ? "Sound: on (click to mute)" : "Sound: off (click to enable)"
-  );
+      span.getAttribute(soundOn ? "data-on" : "data-off") || (soundOn ? "🔊" : "🔈");
+  btn.setAttribute("title", soundOn ? "Sound: on (click to mute)" : "Sound: off (click to enable)");
 }
 document.getElementById("mute-toggle")?.addEventListener("click", () => {
   soundOn = !soundOn;
@@ -81,7 +68,6 @@ document.getElementById("mute-toggle")?.addEventListener("click", () => {
 });
 updateMuteUI();
 
-/* ---------------- Clock ---------------- */
 const clockEl = document.getElementById("clock");
 function tick() {
   if (!clockEl) return;
@@ -93,7 +79,6 @@ function tick() {
 tick();
 setInterval(tick, 15000);
 
-/* ---------------- Start menu ---------------- */
 const startBtn = document.getElementById("start-button");
 const startMenu = document.getElementById("start-menu");
 function setStart(open: boolean) {
@@ -117,7 +102,6 @@ document.addEventListener("keydown", (e) => {
   if (e.key === "Escape") setStart(false);
 });
 
-/* ---------------- Menu bar (close other dropdowns) ---------------- */
 const menus = Array.from(
   document.querySelectorAll<HTMLDetailsElement>(".menubar details.menu")
 );
@@ -127,11 +111,9 @@ menus.forEach((d) => {
   });
 });
 document.addEventListener("click", (e) => {
-  if (!(e.target as Element).closest(".menubar"))
-    menus.forEach((d) => (d.open = false));
+  if (!(e.target as Element).closest(".menubar")) menus.forEach((d) => (d.open = false));
 });
 
-/* ---------------- Window manager ---------------- */
 interface WinState {
   el: HTMLElement;
   id: string;
@@ -150,7 +132,7 @@ function focusWin(w: WinState) {
     o.el.classList.toggle("is-inactive", o !== w);
     o.taskBtn?.classList.toggle("active", o === w && !o.minimized);
   });
-  if (w.el.classList.contains("floating")) {
+  if (w.el.classList.contains("floating") && !w.el.classList.contains("win--max")) {
     w.el.style.zIndex = String(++zTop);
   }
 }
@@ -173,9 +155,8 @@ function closeWin(w: WinState) {
     else window.location.href = "/";
     return;
   }
-  w.el.style.display = "none";
-  w.taskBtn?.remove();
-  w.taskBtn = null;
+  // Desktop windows: hide but keep the taskbar button so it can be reopened.
+  minimizeWin(w);
 }
 
 document.querySelectorAll<HTMLElement>(".win[data-win]").forEach((el) => {
@@ -188,7 +169,6 @@ document.querySelectorAll<HTMLElement>(".win[data-win]").forEach((el) => {
     minimized: false,
   };
 
-  // taskbar button
   if (el.hasAttribute("data-taskbar") && taskWrap) {
     const b = document.createElement("button");
     b.type = "button";
@@ -205,7 +185,6 @@ document.querySelectorAll<HTMLElement>(".win[data-win]").forEach((el) => {
     w.taskBtn = b;
   }
 
-  // controls
   el.querySelectorAll<HTMLElement>(".win__btn").forEach((btn) => {
     btn.addEventListener("click", (e) => {
       e.stopPropagation();
@@ -215,14 +194,15 @@ document.querySelectorAll<HTMLElement>(".win[data-win]").forEach((el) => {
         el.classList.toggle("win--max");
         if (el.classList.contains("win--max")) {
           el.style.cssText +=
-            ";position:fixed;inset:0 0 40px 0;width:auto;max-width:none;max-height:none;z-index:" +
-            ++zTop;
+            ";position:fixed;inset:0 0 40px 0;width:auto;max-width:none;max-height:none;z-index:8000";
         } else {
           el.style.position = "";
           el.style.inset = "";
           el.style.width = "";
           el.style.maxWidth = "";
           el.style.maxHeight = "";
+          el.style.zIndex = "";
+          focusWin(w);
         }
       } else if (act === "close") closeWin(w);
     });
@@ -231,13 +211,23 @@ document.querySelectorAll<HTMLElement>(".win[data-win]").forEach((el) => {
   el.addEventListener("mousedown", () => focusWin(w));
   wins.push(w);
 
-  // dragging (floating windows only)
   const bar = el.querySelector<HTMLElement>(".win__titlebar.draggable");
   if (bar) enableDrag(el, bar);
 });
 
-// focus first window initially
 if (wins.length) focusWin(wins[0]);
+
+// Icons / buttons that open a desktop window (e.g. the Profile icon).
+document.querySelectorAll<HTMLElement>("[data-open]").forEach((a) => {
+  a.addEventListener("click", (e) => {
+    const id = a.getAttribute("data-open");
+    const w = wins.find((x) => x.id === id);
+    if (w) {
+      e.preventDefault();
+      showWin(w);
+    }
+  });
+});
 
 function enableDrag(el: HTMLElement, handle: HTMLElement) {
   let sx = 0,
@@ -247,14 +237,8 @@ function enableDrag(el: HTMLElement, handle: HTMLElement) {
     dragging = false;
   const onMove = (e: PointerEvent) => {
     if (!dragging) return;
-    const x = Math.max(
-      0,
-      Math.min(window.innerWidth - 80, ox + (e.clientX - sx))
-    );
-    const y = Math.max(
-      0,
-      Math.min(window.innerHeight - 70, oy + (e.clientY - sy))
-    );
+    const x = Math.max(0, Math.min(window.innerWidth - 80, ox + (e.clientX - sx)));
+    const y = Math.max(0, Math.min(window.innerHeight - 70, oy + (e.clientY - sy)));
     el.style.left = x + "px";
     el.style.top = y + "px";
   };
@@ -282,7 +266,6 @@ function enableDrag(el: HTMLElement, handle: HTMLElement) {
   });
 }
 
-/* ---------------- Menu / button actions ([data-act]) ---------------- */
 document.addEventListener("click", (e) => {
   const t = (e.target as Element).closest<HTMLElement>("[data-act]");
   if (!t) return;
@@ -305,22 +288,18 @@ document.addEventListener("click", (e) => {
   }
 });
 
-/* ---------------- Explorer row clicks ---------------- */
 document.querySelectorAll<HTMLElement>("tr[data-href]").forEach((tr) => {
   tr.addEventListener("click", (e) => {
-    if ((e.target as Element).closest("a")) return; // let real links work
+    if ((e.target as Element).closest("a")) return;
     const href = tr.getAttribute("data-href");
     if (href) window.location.href = href;
   });
 });
 
-/* ---------------- small click sound on buttons ---------------- */
 document.addEventListener("click", (e) => {
-  if ((e.target as Element).closest("button, .btn, .dicon, .task-btn"))
-    beep(720, 25);
+  if ((e.target as Element).closest("button, .btn, .dicon, .task-btn")) beep(720, 25);
 });
 
-/* ---------------- "/" focuses Find ---------------- */
 document.addEventListener("keydown", (e) => {
   const tag = (document.activeElement?.tagName || "").toLowerCase();
   if (e.key === "/" && tag !== "input" && tag !== "textarea") {
@@ -333,59 +312,5 @@ document.addEventListener("keydown", (e) => {
     }
   }
 });
-
-/* ---------------- Idle screensaver (bouncing logo) ---------------- */
-const saver = document.getElementById("screensaver");
-const saverImg = saver?.querySelector("img") as HTMLImageElement | null;
-if (saver && saverImg && !reduceMotion) {
-  const IDLE_MS = 60000;
-  let idleTimer: number | undefined;
-  let raf = 0;
-  let x = 60,
-    y = 60,
-    vx = 1.6,
-    vy = 1.6;
-
-  function start() {
-    saver!.classList.add("on");
-    cancelAnimationFrame(raf);
-    raf = requestAnimationFrame(loop);
-  }
-  function stop() {
-    saver!.classList.remove("on");
-    cancelAnimationFrame(raf);
-  }
-  function loop() {
-    const w = saverImg!.offsetWidth || 130;
-    const h = saverImg!.offsetHeight || 70;
-    x += vx;
-    y += vy;
-    if (x <= 0) {
-      x = 0;
-      vx = Math.abs(vx);
-    } else if (x >= window.innerWidth - w) {
-      x = window.innerWidth - w;
-      vx = -Math.abs(vx);
-    }
-    if (y <= 0) {
-      y = 0;
-      vy = Math.abs(vy);
-    } else if (y >= window.innerHeight - h) {
-      y = window.innerHeight - h;
-      vy = -Math.abs(vy);
-    }
-    saverImg!.style.transform = `translate(${x}px, ${y}px)`;
-    raf = requestAnimationFrame(loop);
-  }
-  function resetIdle() {
-    if (saver!.classList.contains("on")) stop();
-    window.clearTimeout(idleTimer);
-    idleTimer = window.setTimeout(start, IDLE_MS);
-  }
-  ["mousemove", "keydown", "pointerdown", "wheel", "touchstart"].forEach((ev) =>
-    window.addEventListener(ev, resetIdle, { passive: true })
-  );
-  resetIdle();
-}
 
 export {};
