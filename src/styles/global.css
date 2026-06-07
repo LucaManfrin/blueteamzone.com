@@ -93,10 +93,10 @@ body {
   font-size: 13px;
   line-height: 1.5;
   color: var(--face-text);
-  background: var(--desktop-fallback) url("/images/wallpaper.png") center / cover no-repeat fixed;
+  background: var(--desktop-fallback) url("/images/wallpaper.svg") center / cover no-repeat fixed;
   overflow-x: hidden;
 }
-:root[data-theme="dark"] body { background-image: url("/images/wallpaper-dark.png"); }
+:root[data-theme="dark"] body { background-image: url("/images/wallpaper-dark.svg"); }
 img { max-width: 100%; height: auto; }
 a { color: var(--link); }
 ::selection { background: var(--sel-bg); color: var(--sel-text); }
