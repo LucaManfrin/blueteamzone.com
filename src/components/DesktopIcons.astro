@@ -1,6 +1,6 @@
 ---
 import { CATEGORIES } from "@/site.config";
-// Fixed order: Profile, Find Notes, then categories, then RSS.
+// Fixed order: Profile, Find Notes, then categories, then cmd + RSS.
 const cats = CATEGORIES;
 ---
 
@@ -23,6 +23,11 @@ const cats = CATEGORIES;
       </a>
     ))
   }
+
+  <a class="dicon" href="/" role="listitem" data-open="terminal" data-dblnav>
+    <img src="/icons/cmd.svg" alt="" width="40" height="40" />
+    <span>cmd.exe</span>
+  </a>
 
   <a class="dicon" href="/rss.xml" role="listitem" data-dblnav>
     <img src="/icons/rss-icon.png" alt="" width="40" height="40" />

@@ -205,6 +205,12 @@ document.querySelectorAll<HTMLElement>(".win[data-win]").forEach((el) => {
     w.taskBtn = b;
   }
 
+  // Windows that start hidden (e.g. the cmd.exe toy) open via their icon.
+  if (el.style.display === "none") {
+    w.minimized = true;
+    w.taskBtn?.classList.remove("active");
+  }
+
   el.querySelectorAll<HTMLElement>(".win__btn").forEach((btn) => {
     btn.addEventListener("click", (e) => {
       e.stopPropagation();
@@ -227,7 +233,10 @@ document.querySelectorAll<HTMLElement>(".win[data-win]").forEach((el) => {
   if (bar) enableDrag(el, bar);
 });
 
-if (wins.length) focusWin(wins[0]);
+if (wins.length) {
+  const firstVisible = wins.find((w) => !w.minimized) || wins[0];
+  focusWin(firstVisible);
+}
 
 // Icons / buttons that open a desktop window (e.g. the Profile icon).
 document.querySelectorAll<HTMLElement>("[data-open]").forEach((a) => {

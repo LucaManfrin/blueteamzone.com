@@ -42,8 +42,39 @@ const hasNone = latest.length === 0;
 
       {hasNone && <p style="font-size:12px">No published notes yet.</p>}
     </Window>
+
+    <Window
+      title="C:\WINDOWS\system32\cmd.exe"
+      icon="/icons/cmd.svg"
+      winId="terminal"
+      floating={true}
+      closeAction="hide"
+      class="term-window"
+      style="left:min(420px,40vw); top:188px; width:min(560px,92vw); display:none;"
+    >
+      <div class="term" data-terminal>
+        <div class="term__out" data-term-out role="log" aria-live="polite" aria-label="Terminal output"></div>
+        <label class="term__line">
+          <span class="term__prompt">C:\Users\luca&gt;</span>
+          <input
+            class="term__in"
+            data-term-in
+            type="text"
+            autocomplete="off"
+            autocapitalize="off"
+            autocorrect="off"
+            spellcheck="false"
+            aria-label="Terminal command input"
+          />
+        </label>
+      </div>
+    </Window>
   </div>
 </Base>
+
+<script>
+  import "@/scripts/terminal.ts";
+</script>
 
 <style is:global>
   @media (min-width: 641px) {
