@@ -50,7 +50,7 @@ const hasNone = latest.length === 0;
       floating={true}
       closeAction="hide"
       class="term-window"
-      style="left:min(420px,40vw); top:188px; width:min(560px,92vw); display:none;"
+      style="left:clamp(12px,6vw,360px); top:clamp(120px,22vh,200px); width:min(560px,90vw); display:none;"
     >
       <div class="term" data-terminal>
         <div class="term__out" data-term-out role="log" aria-live="polite" aria-label="Terminal output"></div>

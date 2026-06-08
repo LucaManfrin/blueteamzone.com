@@ -246,6 +246,7 @@ document.querySelectorAll<HTMLElement>("[data-open]").forEach((a) => {
     if (w) {
       e.preventDefault();
       showWin(w);
+      setStart(false);
     }
   });
 });

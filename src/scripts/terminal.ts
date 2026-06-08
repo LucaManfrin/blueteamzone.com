@@ -187,6 +187,7 @@ if (term && out && input) {
       if (SOCIAL.linkedin) linkLine("LinkedIn", SOCIAL.linkedin, "  ");
       if (SOCIAL.credly) linkLine("Credly", SOCIAL.credly, "  ");
       blank();
+      line("(No email, phone or address exposed. By design.)", "term__dim");
     },
 
     banner() {
@@ -333,6 +334,21 @@ if (term && out && input) {
     if ((e.target as Element).closest(".win__titlebar, a")) return;
     setTimeout(() => input.focus(), 0);
   });
+
+  // Opened from the Start menu (/?app=cmd) — show the window once the desktop
+  // window-manager has wired up the icons, then tidy the URL.
+  if (new URLSearchParams(location.search).get("app") === "cmd") {
+    setTimeout(() => {
+      const icon = document.querySelector<HTMLElement>('.dicon[data-open="terminal"]');
+      if (icon) icon.click();
+      input.focus();
+      try {
+        window.history.replaceState(null, "", location.pathname);
+      } catch {
+        /* ignore */
+      }
+    }, 30);
+  }
 
   printBanner();
   scroll();
