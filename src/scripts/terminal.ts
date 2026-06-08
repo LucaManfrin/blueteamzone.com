@@ -187,7 +187,6 @@ if (term && out && input) {
       if (SOCIAL.linkedin) linkLine("LinkedIn", SOCIAL.linkedin, "  ");
       if (SOCIAL.credly) linkLine("Credly", SOCIAL.credly, "  ");
       blank();
-      line("(No email, phone or address exposed. By design.)", "term__dim");
     },
 
     banner() {
