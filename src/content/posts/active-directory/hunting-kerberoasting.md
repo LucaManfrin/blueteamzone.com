@@ -7,10 +7,10 @@ tags:
   - Active Directory
   - Threat Hunting
   - Kerberos
-published: true
-archived: false
-pinned: true
-featured: true
+published: false
+archived: true
+pinned: false
+featured: false
 author: "Luca Manfrin"
 readingTime: true
 ---
