@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://blueteamzone.com/sitemap-index.xml
