@@ -1,0 +1,5 @@
+Canonical: [https://blueteamzone.com/.well-known/security.txt](https://tuodominio.com/.well-known/security.txt)
+Contact: mailto:security@blueteamzone.com
+Expires: 2027-09-19T00:00:00.000Z
+Preferred-Languages: it, en
+
