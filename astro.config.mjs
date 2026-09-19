@@ -19,8 +19,6 @@ export default defineConfig({
       // so they can never reach the sitemap. We additionally filter defensively.
       filter: (page) =>
         !page.includes("/404") && !page.includes("/search-index.json"),
-      changefreq: "weekly",
-      priority: 0.7,
     }),
   ],
   markdown: {
