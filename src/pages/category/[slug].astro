@@ -1,0 +1,74 @@
+---
+import Base from "../../layouts/Base.astro";
+import PostCard from "../../components/PostCard.astro";
+import { getCollection } from "astro:content";
+import type { CollectionEntry } from "astro:content";
+
+type Post = CollectionEntry<"posts">;
+
+export async function getStaticPaths() {
+  const posts = await getCollection(
+    "posts",
+    (post: Post) => post.data.published && !post.data.archived
+  );
+
+  const categories = Array.from(
+    new Set(
+      posts
+        .map((post: Post) => post.data.category?.trim())
+        .filter(
+          (category: string | undefined): category is string =>
+            Boolean(category)
+        )
+    )
+  );
+
+  return categories.map((category) => ({
+    params: {
+      slug: category
+    },
+    props: {
+      category
+    }
+  }));
+}
+
+const { category } = Astro.props;
+
+const posts = (
+  await getCollection(
+    "posts",
+    (post: Post) =>
+      post.data.published &&
+      !post.data.archived &&
+      post.data.category?.trim() === category
+  )
+).sort(
+  (a: Post, b: Post) =>
+    b.data.date.valueOf() - a.data.date.valueOf()
+);
+---
+
+<Base
+  title={`Category: ${category}`}
+  description={`Posts in the ${category} category.`}
+>
+  <section>
+    <p class="eyebrow">Category</p>
+    <h1>{category}</h1>
+
+    <div class="posts-grid">
+      {posts.map((post: Post) => (
+        <PostCard
+          title={post.data.title}
+          description={post.data.description}
+          date={post.data.date}
+          slug={post.id}
+          category={post.data.category}
+          tags={post.data.tags}
+          pinned={post.data.pinned}
+        />
+      ))}
+    </div>
+  </section>
+</Base>

@@ -1,0 +1,99 @@
+name: Deploy infra
+
+# Plan always runs — read-only, safe. Apply only triggers, and asks for
+# manual approval, if the plan actually detected changes.
+
+on:
+  workflow_run:
+    workflows: ["CI — Build & DevSecOps checks"]
+    types: [completed]
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  plan:
+    name: Terraform plan
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    outputs:
+      plan_exitcode: ${{ steps.plan.outputs.exitcode }}
+    defaults:
+      run:
+        working-directory: terraform
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_sha }}
+
+      - uses: hashicorp/setup-terraform@v4
+        with:
+          terraform_wrapper: false
+
+      - name: Terraform init
+        run: |
+          terraform init \
+            -backend-config="access_key=${{ secrets.R2_ACCESS_KEY_ID }}" \
+            -backend-config="secret_key=${{ secrets.R2_SECRET_ACCESS_KEY }}"
+
+      - name: Terraform plan
+        id: plan
+        run: |
+          set +e
+          terraform plan -out=tfplan -detailed-exitcode \
+            -var="domain=${{ vars.SITE_DOMAIN }}" \
+            -var="cloudflare_account_id=${{ secrets.CLOUDFLARE_ACCOUNT_ID }}" \
+            -var="pages_dev_subdomain=${{ vars.PAGES_DEV_SUBDOMAIN }}"
+          code=$?
+          echo "exitcode=$code" >> "$GITHUB_OUTPUT"
+          # 0 = no changes, 2 = changes present — both are a successful plan.
+          # 1 = a real error, fail the job for that one.
+          if [ "$code" -eq 1 ]; then
+            exit 1
+          fi
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+
+      - name: Show plan (readable diff in the log)
+        if: steps.plan.outputs.exitcode == '2'
+        run: terraform show -no-color tfplan
+
+      - uses: actions/upload-artifact@v4
+        if: steps.plan.outputs.exitcode == '2'
+        with:
+          name: tfplan
+          path: terraform/tfplan
+          retention-days: 1
+
+  apply:
+    name: Terraform apply (requires approval)
+    needs: plan
+    if: ${{ needs.plan.outputs.plan_exitcode == '2' }}
+    runs-on: ubuntu-latest
+    environment: infra
+    defaults:
+      run:
+        working-directory: terraform
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_sha }}
+
+      - uses: hashicorp/setup-terraform@v4
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: tfplan
+          path: terraform
+
+      - name: Terraform init
+        run: |
+          terraform init \
+            -backend-config="access_key=${{ secrets.R2_ACCESS_KEY_ID }}" \
+            -backend-config="secret_key=${{ secrets.R2_SECRET_ACCESS_KEY }}"
+
+      - name: Terraform apply
+        run: terraform apply -auto-approve tfplan
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}

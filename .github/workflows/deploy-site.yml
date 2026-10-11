@@ -1,0 +1,73 @@
+name: Deploy site
+
+# Independent from deploy-infra.yml ,  ships on every push, doesn't wait
+# for a terraform apply (the Pages project already exists after the
+# first one).
+
+on:
+  workflow_run:
+    workflows: ["CI — Build & DevSecOps checks"]    
+    types: [completed]
+    branches: [main]
+
+permissions:
+  contents: read
+  deployments: write
+
+jobs:
+  deploy-site:
+    name: Build & deploy to Cloudflare Pages
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_sha }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: 'npm'
+
+      - run: npm ci
+      - run: npm run build
+
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/pages-action@v1
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          projectName: blueteamzone-com
+          directory: dist
+          branch: main
+          gitHubToken: ${{ secrets.GITHUB_TOKEN }}
+
+  post-deploy-checks:
+    name: Post-deploy DAST & header checks
+    needs: deploy-site
+    runs-on: ubuntu-latest
+    steps:
+      - name: OWASP ZAP baseline scan
+        uses: zaproxy/action-baseline@v0.15.0
+        continue-on-error: true
+        with:
+          target: 'https://${{ vars.SITE_DOMAIN }}'
+          fail_action: false
+          allow_issue_writing: false
+
+      - name: Verify security headers
+        run: |
+          set -e
+          URL="https://${{ vars.SITE_DOMAIN }}"
+          HEADERS=$(curl -sI "$URL")
+          echo "$HEADERS"
+
+          check() {
+            echo "$HEADERS" | grep -qi "$1" || { echo "::error::Missing header: $1"; exit 1; }
+          }
+
+          check "strict-transport-security"
+          check "x-content-type-options"
+          check "x-frame-options"
+          check "content-security-policy"

@@ -1,0 +1,115 @@
+---
+import Base from "../layouts/Base.astro";
+import PostCard from "../components/PostCard.astro";
+import { getAllPosts } from "../lib/posts";
+import type { Post } from "../lib/posts";
+import { SITE } from "../site.config";
+
+const allPosts = await getAllPosts();
+
+const pinnedPosts = allPosts
+  .filter((post: Post) => post.data.pinned)
+  .slice(0, 3);
+
+const pinnedSlugs = new Set(
+  pinnedPosts.map((post: Post) => post.id)
+);
+
+const remainingPosts = allPosts.filter(
+  (post: Post) => !pinnedSlugs.has(post.id)
+);
+
+const posts = [...pinnedPosts, ...remainingPosts].slice(0, 6);
+---
+
+<Base title={SITE.title} description={SITE.description}>
+  <div class="hero">
+    <h1>Blue Team Zone</h1>
+    <p class="tagline">
+      Practical write-ups on Windows, Active Directory, Linux, macOS, Threat
+      Hunting and Security Tools
+    </p>
+  </div>
+
+  <section class="posts-section">
+    <h2>Latest Posts</h2>
+
+    <div class="posts-grid">
+      {posts.map((post: Post) => (
+        <PostCard
+          title={post.data.title}
+          description={post.data.description}
+          date={post.data.date}
+          slug={post.id}
+          category={post.data.category}
+          tags={post.data.tags}
+          pinned={post.data.pinned}
+        />
+      ))}
+    </div>
+
+    <div class="view-all">
+      <a href="/posts">View all posts →</a>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .hero {
+    text-align: center;
+    padding: 3rem 0;
+    margin-bottom: 2rem;
+  }
+
+  .hero h1 {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+  }
+
+  .tagline {
+    font-size: 1.25rem;
+    color: var(--color-text-muted);
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  .posts-section {
+    margin-top: 3rem;
+  }
+
+  .posts-section h2 {
+    margin-bottom: 1.5rem;
+  }
+
+  .posts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+  }
+
+  .view-all {
+    text-align: center;
+    padding: 2rem 0;
+  }
+
+  .view-all a {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--color-accent);
+  }
+
+  @media (max-width: 640px) {
+    .hero h1 {
+      font-size: 2rem;
+    }
+
+    .tagline {
+      font-size: 1rem;
+    }
+
+    .posts-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

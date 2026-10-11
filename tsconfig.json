@@ -1,0 +1,9 @@
+{
+  "compilerOptions": {
+    "moduleResolution": "bundler",
+    "allowJs": true,
+    "checkJs": false,
+    "jsxImportSource": "astro/jsx",
+    "strict": true
+  }
+}

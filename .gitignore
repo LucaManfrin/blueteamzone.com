@@ -1,0 +1,30 @@
+# dependencies
+node_modules/
+
+# build output
+dist/
+build/
+.astro/
+.wrangler/
+
+# env files
+.env
+.env.*
+!.env.example
+
+# IDE
+# editor
+.vscode/
+.DS_Store
+
+# terraform
+terraform/.terraform/
+terraform/*.tfstate
+terraform/*.tfstate.backup
+terraform/.terraform.lock.hcl
+terraform/*.tfvars
+!terraform/*.tfvars.example
+terraform/terraform.exe
+
+#
+tatus

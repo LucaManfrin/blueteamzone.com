@@ -1,0 +1,82 @@
+---
+import Base from "../../layouts/Base.astro";
+import PostCard from "../../components/PostCard.astro";
+import Pagination from "../../components/Pagination.astro";
+import { getAllPosts } from "../../lib/posts";
+import type { Post } from "../../lib/posts";
+import { POSTS_PER_PAGE } from "../../site.config";
+
+export async function getStaticPaths() {
+  const allPosts = await getAllPosts();
+  const totalPages = Math.ceil(allPosts.length / POSTS_PER_PAGE);
+
+  return Array.from({ length: totalPages - 1 }, (_, index) => {
+    const page = index + 2;
+
+    return {
+      params: {
+        page: String(page)
+      }
+    };
+  });
+}
+
+const currentPage = Number(Astro.params.page);
+
+if (!Number.isInteger(currentPage) || currentPage < 2) {
+  return Astro.redirect("/404", 302);
+}
+
+const allPosts = await getAllPosts();
+const totalPages = Math.ceil(allPosts.length / POSTS_PER_PAGE);
+
+if (currentPage > totalPages) {
+  return Astro.redirect("/404", 302);
+}
+
+const startIndex = (currentPage - 1) * POSTS_PER_PAGE;
+const posts = allPosts.slice(
+  startIndex,
+  startIndex + POSTS_PER_PAGE
+);
+
+const title = `All Posts - Page ${currentPage}`;
+---
+
+<Base title={title} description="Browse all articles">
+  <h1>All Posts (Page {currentPage})</h1>
+
+  <div class="posts-grid">
+    {posts.map((post: Post) => (
+      <PostCard
+        title={post.data.title}
+        description={post.data.description}
+        date={post.data.date}
+        slug={post.id}
+        category={post.data.category}
+        tags={post.data.tags}
+        pinned={post.data.pinned}
+      />
+    ))}
+  </div>
+
+  <Pagination
+    currentPage={currentPage}
+    totalPages={totalPages}
+    baseUrl="/posts"
+  />
+</Base>
+
+<style>
+  .posts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 1.5rem;
+  }
+
+  @media (max-width: 640px) {
+    .posts-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
