@@ -1,4 +1,4 @@
-resource "cloudflare_pages_project" "portfolio" {
+resource "cloudflare_pages_project" "blueteamzone-com" {
   account_id        = var.cloudflare_account_id
   name              = "blueteamzone-com"
   production_branch = "main"
