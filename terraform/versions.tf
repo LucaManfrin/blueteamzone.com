@@ -9,7 +9,7 @@ terraform {
   }
 
   backend "s3" {
-    bucket                      = "blueteamzone-bucket"
+    bucket                      = "blueteamzoner2"
     key                         = "terraform.tfstate"
     region                      = "auto"
     endpoints                   = { s3 = "https://75fb02c872fe7c70cf127b5d17f97e51.r2.cloudflarestorage.com" }
