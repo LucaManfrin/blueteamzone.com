@@ -1,0 +1,55 @@
+---
+import Base from "../../layouts/Base.astro";
+import PostCard from "../../components/PostCard.astro";
+import { getAllPosts } from "../../lib/posts";
+import { POSTS_PER_PAGE } from "../../site.config";
+
+const allPosts = await getAllPosts();
+const totalPages = Math.ceil(allPosts.length / POSTS_PER_PAGE);
+
+const posts = allPosts.slice(0, POSTS_PER_PAGE);
+---
+
+<Base title="All Posts" description="Browse all articles">
+  <h1>All Posts</h1>
+
+  <div class="posts-grid">
+    {posts.map((post) => (
+      <PostCard
+        title={post.data.title}
+        description={post.data.description}
+        date={post.data.date}
+        slug={post.id}
+        category={post.data.category}
+        tags={post.data.tags}
+        pinned={post.data.pinned}
+      />
+    ))}
+  </div>
+
+  {totalPages > 1 && (
+    <nav class="pagination" aria-label="Posts pagination">
+      <a href="/posts/2/">Next →</a>
+    </nav>
+  )}
+</Base>
+
+<style>
+  .posts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 2rem;
+  }
+
+  @media (max-width: 640px) {
+    .posts-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

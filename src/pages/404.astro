@@ -1,0 +1,88 @@
+---
+import Base from "../layouts/Base.astro";
+---
+
+<Base title="404 - Not Found">
+  <div class="error-container">
+    <h1>404</h1>
+    <h2>Pagina non trovata</h2>
+    <p>La pagina che stai cercando non esiste o è stata spostata.</p>
+    
+    <div class="actions">
+      <a href="/" class="back-link">← Torna alla Home</a>
+      <a href="/posts" class="back-link">Vai ai Post</a>
+      <a href="/search" class="back-link">Cerca qualcosa</a>
+    </div>
+  </div>
+</Base>
+
+<style>
+  .error-container {
+    text-align: center;
+    padding: 4rem 2rem;
+    min-height: 60vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .error-container h1 {
+    font-size: 5rem;
+    margin-bottom: 1rem;
+    color: var(--color-accent);
+  }
+
+  .error-container h2 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+  }
+
+  .error-container p {
+    font-size: 1.1rem;
+    color: var(--color-text-muted);
+    margin-bottom: 2rem;
+  }
+
+  .actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .back-link {
+    padding: 0.75rem 1.5rem;
+    background-color: var(--color-bg-alt);
+    border: 1px solid var(--color-border);
+    border-radius: 0.5rem;
+    color: var(--color-accent);
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.2s;
+  }
+
+  .back-link:hover {
+    background-color: var(--color-accent);
+    color: var(--color-bg);
+  }
+
+  @media (max-width: 640px) {
+    .error-container h1 {
+      font-size: 3rem;
+    }
+
+    .error-container h2 {
+      font-size: 1.5rem;
+    }
+
+    .actions {
+      flex-direction: column;
+      width: 100%;
+    }
+
+    .back-link {
+      width: 100%;
+    }
+  }
+</style>

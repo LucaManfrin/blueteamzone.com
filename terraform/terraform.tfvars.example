@@ -1,0 +1,10 @@
+# Copy this to terraform.tfvars and fill in real values.
+# terraform.tfvars is gitignored — never commit it.
+
+domain                 = "blueteamzone.com"
+cloudflare_account_id  = "your-cloudflare-account-id"
+pages_dev_subdomain    = "blueteamzone-com" # check dashboard — may not match the project name
+
+# CLOUDFLARE_API_TOKEN is read from the environment, not from this file:
+#   export CLOUDFLARE_API_TOKEN="..."
+# In CI, it's stored as a GitHub Actions secret instead.

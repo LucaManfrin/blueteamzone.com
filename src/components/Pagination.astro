@@ -1,0 +1,109 @@
+---
+interface Props {
+  currentPage: number;
+  totalPages: number;
+  baseUrl: string;
+}
+
+const {
+  currentPage,
+  totalPages,
+  baseUrl,
+} = Astro.props;
+
+const normalizedBaseUrl = `/${baseUrl.replace(/^\/+|\/+$/g, "")}`;
+
+const prevUrl =
+  currentPage > 1
+    ? currentPage === 2
+      ? `${normalizedBaseUrl}/`
+      : `${normalizedBaseUrl}/${currentPage - 1}/`
+    : null;
+
+const nextUrl =
+  currentPage < totalPages
+    ? `${normalizedBaseUrl}/${currentPage + 1}/`
+    : null;
+---
+
+{totalPages > 1 && (
+  <nav class="pagination" aria-label="Pagination">
+    <div class="pagination-controls">
+      {prevUrl ? (
+        <a
+          href={prevUrl}
+          class="pagination-link prev"
+          rel="prev"
+        >
+          ← Previous
+        </a>
+      ) : (
+        <span
+          class="pagination-link disabled"
+          aria-disabled="true"
+        >
+          ← Previous
+        </span>
+      )}
+
+      <span class="pagination-info">
+        Page {currentPage} of {totalPages}
+      </span>
+
+      {nextUrl ? (
+        <a
+          href={nextUrl}
+          class="pagination-link next"
+          rel="next"
+        >
+          Next →
+        </a>
+      ) : (
+        <span
+          class="pagination-link disabled"
+          aria-disabled="true"
+        >
+          Next →
+        </span>
+      )}
+    </div>
+  </nav>
+)}
+
+<style>
+  .pagination {
+    margin: 3rem 0 1rem;
+    display: flex;
+    justify-content: center;
+  }
+
+  .pagination-controls {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .pagination-link {
+    color: var(--color-accent);
+    text-decoration: none;
+    font-weight: 500;
+    transition: opacity 0.2s;
+  }
+
+  .pagination-link:hover {
+    opacity: 0.7;
+  }
+
+  .pagination-link.disabled {
+    color: var(--color-text-muted);
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+
+  .pagination-info {
+    color: var(--color-text-muted);
+    font-size: 0.9rem;
+  }
+</style>
