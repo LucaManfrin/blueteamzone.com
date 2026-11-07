@@ -33,4 +33,4 @@ export const CATEGORIES = [
   { slug: "Tools", label: "Security Tools" },
 ];
 
-export const POSTS_PER_PAGE = 10;
+export const POSTS_PER_PAGE = 9;
