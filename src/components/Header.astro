@@ -14,19 +14,20 @@ const path = Astro.url.pathname;
     </div>
     
     <div class="nav-center">
+      <a
+        href="/whoami/"
+        class={`nav-link ${path === "/whoami/" ? "active" : ""}`}
+      >
+        Whoami
+      </a>
+    
       {
         CATEGORIES.map((cat) => (
-          <a 
+          <a
             href={`/category/${cat.slug}`}
             class={`nav-link ${path.includes(`/category/${cat.slug}`) ? "active" : ""}`}
           >
             {cat.label}
-          </a>
-          <a
-            href="/whoami/"
-            class={`nav-link ${path === "/whoami/" ? "active" : ""}`}
-          >
-            Whoami
           </a>
         ))
       }
