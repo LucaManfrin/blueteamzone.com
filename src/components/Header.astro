@@ -47,8 +47,15 @@ const path = Astro.url.pathname;
       <a href="/search" class="nav-link icon-link" title="Search">
         🔍
       </a>
-      <button id="theme-toggle" class="nav-link icon-link" title="Toggle dark mode">
-        🌙
+      <button
+        id="theme-toggle"
+        type="button"
+        class="nav-link icon-link"
+        aria-label="Switch color theme"
+        aria-pressed="false"
+        title="Switch color theme"
+      >
+        ☀️
       </button>
     </div>
   </nav>
@@ -186,30 +193,55 @@ const path = Astro.url.pathname;
   }
 </style>
 
+
 <script>
-  const themeToggle = document.getElementById("theme-toggle");
-  
-  function getTheme() {
-    return localStorage.getItem("theme") || "dark";
+  const themeToggle = document.getElementById(
+    "theme-toggle"
+  );
+
+  function getTheme(): "dark" | "light" {
+    return document.documentElement.dataset.theme === "light"
+      ? "light"
+      : "dark";
   }
 
-  function setTheme(theme: string) {
-    localStorage.setItem("theme", theme);
-    document.documentElement.dataset.theme = theme;
-    updateIcon();
-  }
+  function updateThemeButton() {
+    if (!themeToggle) return;
 
-  function updateIcon() {
-    const theme = getTheme();
-    if (themeToggle) {
-      themeToggle.textContent = theme === "dark" ? "☀️" : "🌙";
-    }
+    const isDark = getTheme() === "dark";
+
+    themeToggle.textContent = isDark ? "☀️" : "🌙";
+
+    themeToggle.setAttribute(
+      "aria-label",
+      isDark ? "Switch to light mode" : "Switch to dark mode"
+    );
+
+    themeToggle.setAttribute(
+      "title",
+      isDark ? "Switch to light mode" : "Switch to dark mode"
+    );
+
+    themeToggle.setAttribute(
+      "aria-pressed",
+      String(!isDark)
+    );
   }
 
   themeToggle?.addEventListener("click", () => {
-    const current = getTheme();
-    setTheme(current === "dark" ? "light" : "dark");
+    const newTheme =
+      getTheme() === "dark" ? "light" : "dark";
+
+    document.documentElement.dataset.theme = newTheme;
+
+    try {
+      localStorage.setItem("theme", newTheme);
+    } catch {
+      // Theme still works if storage is unavailable.
+    }
+
+    updateThemeButton();
   });
 
-  setTheme(getTheme());
+  updateThemeButton();
 </script>
