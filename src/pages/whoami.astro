@@ -1,0 +1,277 @@
+
+---
+import Base from "../layouts/Base.astro";
+import { SITE, SOCIAL } from "../site.config";
+
+const specialties = [
+  {
+    title: "Incident Response",
+    description:
+      "Investigation and coordination of complex cybersecurity incidents, including ransomware attacks, from initial triage through containment, eradication and recovery.",
+  },
+  {
+    title: "Digital Forensics",
+    description:
+      "Disk, Memory and Network forensics to reconstruct attacker activity, identify root causes and support incident reporting across multiples environments.",
+  },
+  {
+    title: "Threat Hunting & Threat Detection",
+    description:
+      "Proactive threat hunting, development of detection use cases and continuous improvement of security monitoring capabilities.",
+  },
+  {
+    title: "Threat Intelligence",
+    description:
+      "Analysis of threats, adversary infrastructure, phishing campaigns and open-source intelligence to support defensive decisions.",
+  },
+  {
+    title: "Security Automation",
+    description:
+      "Development of custom tools and Python-based automation to improve investigation workflows and operational efficiency.",
+  },
+  {
+    title: "Adversary Emulation",
+    description:
+      "Controlled simulation of attacker techniques and validation of defensive controls to identify detection gaps.",
+  },
+];
+
+const skills = [
+  "Incident Response",
+  "DFIR",
+  "Threat Hunting",
+  "Threat Intelligence",
+  "Detection Engineering",
+  "Security Automation",
+  "Linux",
+  "Windows",
+  "macOS",
+  "Active Directory",
+  "Virtualization Security",
+];
+---
+
+<Base
+  title={`Whoami | ${SITE.title}`}
+  description="Cybersecurity Specialist focused on incident response, digital forensics, detection engineering and threat hunting."
+>
+  <article class="whoami">
+    <header class="intro">
+      <span class="prompt">$ whoami</span>
+
+      <h1>{SITE.author}</h1>
+      <p class="role">{SITE.authorTitle}</p>
+
+      <p class="summary">
+        Cybersecurity professional with hands-on experience in
+        investigating and responding to complex cyberattacks,
+        including ransomware incidents.
+      </p>
+
+      <p class="summary">
+        My experience in an MSSP environment has allowed me to work
+        across diverse infrastructures and security technologies,
+        building expertise in Incident Response, Digital Forensics,
+        Threat Hunting, Threat Intelligence and Detection Engineering.
+      </p>
+    </header>
+
+    <section aria-labelledby="expertise-title">
+      <h2 id="expertise-title">
+        <span class="prompt">01 /</span> What I do
+      </h2>
+
+      <div class="expertise-grid">
+        {specialties.map((item) => (
+          <div class="expertise-card">
+            <h3>{item.title}</h3>
+            <p>{item.description}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <section aria-labelledby="skills-title">
+      <h2 id="skills-title">
+        <span class="prompt">02 /</span> Technical interests
+      </h2>
+
+      <div class="skills">
+        {skills.map((skill) => (
+          <span class="skill">{skill}</span>
+        ))}
+      </div>
+    </section>
+
+    <section aria-labelledby="blog-title">
+      <h2 id="blog-title">
+        <span class="prompt">03 /</span> About this blog
+      </h2>
+
+      <p>
+        Blue Team Zone is my personal cybersecurity notebook,
+        where I share practical research, investigation techniques,
+        detection approaches and lessons learned while working
+        with different technologies.
+      </p>
+
+      <p>
+        My goal is to document useful knowledge and contribute
+        to the defensive security community.
+      </p>
+
+      <a href="/posts/" class="read-posts">
+        Explore my write-ups →
+      </a>
+    </section>
+
+    <section aria-labelledby="connect-title">
+      <h2 id="connect-title">
+        <span class="prompt">04 /</span> Find me
+      </h2>
+
+      <div class="social-links">
+        <a href={SOCIAL.github}
+           target="_blank"
+           rel="noopener noreferrer">
+          GitHub ↗
+        </a>
+
+        <a href={SOCIAL.linkedin}
+           target="_blank"
+           rel="noopener noreferrer">
+          LinkedIn ↗
+        </a>
+
+        <a href={SOCIAL.credly}
+           target="_blank"
+           rel="noopener noreferrer">
+          Credly ↗
+        </a>
+
+        <a href={`mailto:${SOCIAL.mail}`}>
+          Email ↗
+        </a>
+      </div>
+    </section>
+  </article>
+</Base>
+
+<style>
+  .whoami {
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  .intro {
+    padding: 3rem 0 2rem;
+    border-bottom: 1px solid var(--color-border);
+    margin-bottom: 3rem;
+  }
+
+  .prompt {
+    color: var(--color-accent);
+    font-family: var(--font-mono);
+    font-size: 0.9rem;
+  }
+
+  .intro h1 {
+    margin-top: 1rem;
+    margin-bottom: 0.25rem;
+    font-size: clamp(2.4rem, 6vw, 4rem);
+  }
+
+  .role {
+    color: var(--color-accent);
+    font-size: 1.15rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+  }
+
+  .summary {
+    max-width: 760px;
+    line-height: 1.8;
+  }
+
+  section {
+    margin-bottom: 3.5rem;
+  }
+
+  section h2 {
+    margin-bottom: 1.5rem;
+    font-size: 1.5rem;
+  }
+
+  .expertise-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+  }
+
+  .expertise-card {
+    background: var(--color-bg-alt);
+    border: 1px solid var(--color-border);
+    border-radius: 0.75rem;
+    padding: 1.5rem;
+  }
+
+  .expertise-card h3 {
+    color: var(--color-accent);
+    font-size: 1rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .expertise-card p {
+    font-size: 0.95rem;
+    line-height: 1.7;
+    margin: 0;
+  }
+
+  .skills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+
+  .skill {
+    border: 1px solid var(--color-border);
+    border-radius: 0.4rem;
+    padding: 0.4rem 0.75rem;
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+  }
+
+  .read-posts {
+    display: inline-block;
+    font-weight: 600;
+    margin-top: 0.5rem;
+  }
+
+  .social-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .social-links a {
+    border: 1px solid var(--color-border);
+    border-radius: 0.5rem;
+    padding: 0.65rem 1rem;
+    font-weight: 600;
+  }
+
+  .social-links a:hover {
+    border-color: var(--color-accent);
+    text-decoration: none;
+  }
+
+  @media (max-width: 640px) {
+    .intro {
+      padding-top: 1.5rem;
+    }
+
+    .expertise-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
