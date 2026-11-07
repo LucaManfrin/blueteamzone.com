@@ -22,6 +22,12 @@ const path = Astro.url.pathname;
           >
             {cat.label}
           </a>
+          <a
+            href="/whoami/"
+            class={`nav-link ${path === "/whoami/" ? "active" : ""}`}
+          >
+            Whoami
+          </a>
         ))
       }
     </div>
