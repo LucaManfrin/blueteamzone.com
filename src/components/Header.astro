@@ -1,5 +1,5 @@
 ---
-import { SITE, CATEGORIES } from "../site.config";
+import { SITE } from "../site.config";
 
 const path = Astro.url.pathname;
 ---
@@ -15,22 +15,32 @@ const path = Astro.url.pathname;
     
     <div class="nav-center">
       <a
+        href="/"
+        class={`nav-link ${path === "/" ? "active" : ""}`}
+      >
+        Home
+      </a>
+    
+      <a
+        href="/posts/"
+        class={`nav-link ${
+          path.startsWith("/posts/") ||
+          path.startsWith("/category/")
+            ? "active"
+            : ""
+        }`}
+      >
+        Posts
+      </a>
+    
+      <a
         href="/whoami/"
-        class={`nav-link ${path === "/whoami/" ? "active" : ""}`}
+        class={`nav-link ${
+          path.startsWith("/whoami/") ? "active" : ""
+        }`}
       >
         Whoami
       </a>
-    
-      {
-        CATEGORIES.map((cat) => (
-          <a
-            href={`/category/${cat.slug}`}
-            class={`nav-link ${path.includes(`/category/${cat.slug}`) ? "active" : ""}`}
-          >
-            {cat.label}
-          </a>
-        ))
-      }
     </div>
 
     <div class="nav-end">
