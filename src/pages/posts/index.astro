@@ -12,6 +12,20 @@ const totalPages = Math.ceil(
 );
 
 const posts = allPosts.slice(0, POSTS_PER_PAGE);
+
+const categoryOrder = [
+  "Active-Directory",
+  "Linux",
+  "macOS",
+  "Threat-Hunting",
+  "Tools",
+  "Windows",
+];
+
+const orderedCategories = categoryOrder
+  .map((slug) => CATEGORIES.find((cat) => cat.slug === slug))
+  .filter((cat): cat is (typeof CATEGORIES)[number] => Boolean(cat));
+
 ---
 
 <Base
@@ -34,7 +48,7 @@ const posts = allPosts.slice(0, POSTS_PER_PAGE);
         All Posts
       </a>
 
-      {CATEGORIES.map((cat) => (
+      {orderedCategories.map((cat) => (
         <a
           href={`/category/${cat.slug}/`}
           class="category"
@@ -132,13 +146,13 @@ const posts = allPosts.slice(0, POSTS_PER_PAGE);
   }
 
   .posts-grid {
-    display: grid;
-    grid-template-columns: repeat(
-      auto-fill,
-      minmax(300px, 1fr)
-    );
-    gap: 1.5rem;
-    margin-bottom: 2rem;
+  display: grid;
+  grid-template-columns: repeat(
+    auto-fill,
+    minmax(300px, 1fr)
+  );
+  gap: 1rem;
+  margin-bottom: 2rem;
   }
 
   .pagination {
