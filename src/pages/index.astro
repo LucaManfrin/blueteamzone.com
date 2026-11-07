@@ -1,164 +1,116 @@
 
 ---
-import Base from "../../layouts/Base.astro";
-import PostCard from "../../components/PostCard.astro";
-import { getAllPosts } from "../../lib/posts";
-import { CATEGORIES, POSTS_PER_PAGE } from "../../site.config";
-
-const allPosts = await getAllPosts();
-
-const totalPages = Math.ceil(
-  allPosts.length / POSTS_PER_PAGE
-);
-
-const posts = allPosts.slice(0, POSTS_PER_PAGE);
+import Base from "../layouts/Base.astro";
+import { SITE } from "../site.config";
 ---
 
-<Base
-  title="Posts | Blue Team Zone"
-  description="Cybersecurity articles, research and technical write-ups."
->
-  <div class="page-intro">
-    <h1>Posts</h1>
-    <p>
-      Explore cybersecurity write-ups, research,
-      investigations and practical guides.
-    </p>
-  </div>
-
-  <section class="categories-section">
-    <h2>Browse by Category</h2>
-
-    <nav class="categories" aria-label="Post categories">
-      <a href="/posts/" class="category active">
-        All Posts
-      </a>
-
-      {CATEGORIES.map((cat) => (
-        <a
-          href={`/category/${cat.slug}/`}
-          class="category"
-        >
-          {cat.label}
-        </a>
-      ))}
-    </nav>
-  </section>
-
-  <section class="posts-section">
-    <h2>Latest Posts</h2>
-
-    <div class="posts-grid">
-      {posts.map((post) => (
-        <PostCard
-          title={post.data.title}
-          description={post.data.description}
-          date={post.data.date}
-          slug={post.id}
-          category={post.data.category}
-          tags={post.data.tags}
-          pinned={post.data.pinned}
-        />
-      ))}
+<Base title={SITE.title} description={SITE.description}>
+  <section class="hero">
+    <div class="terminal-label">
+      <span class="prompt">$</span> welcome
     </div>
 
-    {totalPages > 1 && (
-      <nav
-        class="pagination"
-        aria-label="Posts pagination"
-      >
-        <a href="/posts/2/">
-          Next Page →
-        </a>
-      </nav>
-    )}
+    <h1>Blue Team Zone</h1>
+
+    <p class="subtitle">
+      Cybersecurity Research & Technical Write-ups
+    </p>
+
+    <p class="description">
+      A personal cybersecurity notebook focused on
+      Incident Response, Digital Forensics, Threat Hunting,
+      Detection Engineering, and practical security research.
+    </p>
+
+    <div class="hero-actions">
+      <a href="/posts/" class="button primary">
+        Explore Posts →
+      </a>
+
+      <a href="/whoami/" class="button secondary">
+        Whoami
+      </a>
+    </div>
   </section>
 </Base>
 
 <style>
-  .page-intro {
-    padding: 2rem 0;
-    margin-bottom: 1rem;
+  .hero {
+    max-width: 850px;
+    min-height: 65vh;
+    margin: 0 auto;
+    padding: 5rem 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
   }
 
-  .page-intro h1 {
-    margin-bottom: 0.75rem;
-  }
-
-  .page-intro p {
+  .terminal-label {
+    font-family: var(--font-mono);
     color: var(--color-text);
-    max-width: 700px;
-  }
-
-  .categories-section {
-    margin-bottom: 3rem;
-  }
-
-  .categories-section h2,
-  .posts-section h2 {
-    font-size: 1.5rem;
     margin-bottom: 1.5rem;
   }
 
-  .categories {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.75rem;
-  }
-
-  .category {
-    display: inline-block;
-    padding: 0.6rem 1rem;
-    background: var(--color-bg-alt);
-    border: 1px solid var(--color-border);
-    border-radius: 0.5rem;
-    color: var(--color-text);
-    font-size: 0.9rem;
-    text-decoration: none;
-    transition: border-color 0.2s;
-  }
-
-  .category:hover {
-    border-color: var(--color-accent);
+  .prompt {
     color: var(--color-accent);
-    text-decoration: none;
+    font-weight: 700;
   }
 
-  .category.active {
-    background: var(--color-accent);
-    border-color: var(--color-accent);
-    color: #0d1117;
+  h1 {
+    font-size: clamp(2.5rem, 7vw, 4.5rem);
+    margin-bottom: 1rem;
+  }
+
+  .subtitle {
+    color: var(--color-accent);
     font-weight: 600;
+    font-size: 1.25rem;
   }
 
-  .posts-grid {
-    display: grid;
-    grid-template-columns: repeat(
-      auto-fill,
-      minmax(300px, 1fr)
-    );
-    gap: 1.5rem;
-    margin-bottom: 2rem;
+  .description {
+    max-width: 650px;
+    color: var(--color-text);
+    line-height: 1.8;
+    margin: 1rem 0 2rem;
   }
 
-  .pagination {
+  .hero-actions {
     display: flex;
     justify-content: center;
-    padding: 2rem 0;
+    gap: 1rem;
+    flex-wrap: wrap;
   }
 
-  .pagination a {
-    color: var(--color-accent);
+  .button {
+    display: inline-block;
+    padding: 0.8rem 1.5rem;
+    border-radius: 0.5rem;
+    text-decoration: none;
     font-weight: 600;
+    transition: opacity 0.2s;
+  }
+
+  .button:hover {
+    opacity: 0.85;
+    text-decoration: none;
+  }
+
+  .primary {
+    background: var(--color-accent);
+    color: #0d1117;
+  }
+
+  .secondary {
+    border: 1px solid var(--color-border);
+    color: var(--color-text);
   }
 
   @media (max-width: 640px) {
-    .posts-grid {
-      grid-template-columns: 1fr;
-    }
-
-    .page-intro {
-      padding: 1rem 0;
+    .hero {
+      min-height: 55vh;
+      padding: 3rem 0;
     }
   }
 </style>
