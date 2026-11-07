@@ -18,18 +18,7 @@ const { title, description, image, canonical } = Astro.props;
 <html lang="en" data-theme="dark">
   <head>
     <!-- Apply saved theme before rendering the page -->
-    <script is:inline>
-      (() => {
-        try {
-          const savedTheme = localStorage.getItem("theme");
-
-          document.documentElement.dataset.theme =
-            savedTheme === "light" ? "light" : "dark";
-        } catch {
-          document.documentElement.dataset.theme = "dark";
-        }
-      })();
-    </script>
+    <script is:inline src="/theme.js"></script>
 
     <BaseHead
       title={title}
